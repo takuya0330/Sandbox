@@ -1,0 +1,9 @@
+# folder
+.vs
+x64
+asset
+bin
+external
+
+# file
+*.user
