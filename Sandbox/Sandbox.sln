@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DLLExport", "Source\DLLExpo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DLLImport", "Source\DLLImport\DLLImport.vcxproj", "{D79DE279-CE5D-4EFD-A9DE-448F32AB943E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Memory", "Source\Memory\Memory.vcxproj", "{19C61CC5-FBD6-4166-9A3A-6B2AECF4ACF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{D79DE279-CE5D-4EFD-A9DE-448F32AB943E}.Release|x64.Build.0 = Release|x64
 		{D79DE279-CE5D-4EFD-A9DE-448F32AB943E}.Release|x86.ActiveCfg = Release|Win32
 		{D79DE279-CE5D-4EFD-A9DE-448F32AB943E}.Release|x86.Build.0 = Release|Win32
+		{19C61CC5-FBD6-4166-9A3A-6B2AECF4ACF4}.Debug|x64.ActiveCfg = Debug|x64
+		{19C61CC5-FBD6-4166-9A3A-6B2AECF4ACF4}.Debug|x64.Build.0 = Debug|x64
+		{19C61CC5-FBD6-4166-9A3A-6B2AECF4ACF4}.Debug|x86.ActiveCfg = Debug|Win32
+		{19C61CC5-FBD6-4166-9A3A-6B2AECF4ACF4}.Debug|x86.Build.0 = Debug|Win32
+		{19C61CC5-FBD6-4166-9A3A-6B2AECF4ACF4}.Release|x64.ActiveCfg = Release|x64
+		{19C61CC5-FBD6-4166-9A3A-6B2AECF4ACF4}.Release|x64.Build.0 = Release|x64
+		{19C61CC5-FBD6-4166-9A3A-6B2AECF4ACF4}.Release|x86.ActiveCfg = Release|Win32
+		{19C61CC5-FBD6-4166-9A3A-6B2AECF4ACF4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
