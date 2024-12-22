@@ -17,9 +17,9 @@ using namespace DirectX;
 #define _ARITHMETIC_V(N, OP, ...) _ARITHMETIC_V##N(OP)
 #define _ARITHMETIC_T(N, OP, ...) _ARITHMETIC_T##N(OP)
 
-#define _ARITHMETIC_OPERATOR(TYPE, N, OP)                                                                           \
-    inline static TYPE operator OP(const TYPE& v1, const TYPE& v2) { return { _ARITHMETIC_V(N, OP) }; }             \
-    inline static TYPE operator OP(const TYPE& v1, const decltype(TYPE::x) v2) { return { _ARITHMETIC_T(N, OP) }; }
+#define _ARITHMETIC_OPERATOR(TYPE, N, OP)                                                                                       \
+    inline static constexpr TYPE operator OP(const TYPE& v1, const TYPE& v2) { return TYPE(_ARITHMETIC_V(N, OP)); }             \
+    inline static constexpr TYPE operator OP(const TYPE& v1, const decltype(TYPE::x) v2) { return TYPE(_ARITHMETIC_T(N, OP)); }
 
 #define _ASSIGNMENT_V2(OP) \
 	v1.x OP v2.x;          \
