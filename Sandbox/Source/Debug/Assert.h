@@ -15,35 +15,39 @@
 #endif
 
 // https://learn.microsoft.com/en-us/cpp/build/formatting-the-output-of-a-custom-build-step-or-build-event?view=msvc-170
-#define VS_OUTPUT_ERROR(...)   Log::Output(__FILE__, "(", __LINE__, "): ERROR: ", __FUNCSIG__, ": ", __VA_ARGS__)
-#define VS_OUTPUT_WARNING(...) Log::Output(__FILE__, "(", __LINE__, "): WARNING: ", __FUNCSIG__, ": ", __VA_ARGS__)
+#define _VS_OUTPUT_ERROR(...)   Log::Output(__FILE__, "(", __LINE__, "): ERROR: ", __FUNCSIG__, ": ", __VA_ARGS__)
+#define _VS_OUTPUT_WARNING(...) Log::Output(__FILE__, "(", __LINE__, "): WARNING: ", __FUNCSIG__, ": ", __VA_ARGS__)
 
-#define _ASSERT(expr)                                     \
-	do                                                    \
-	{                                                     \
-		if (!(expr))                                      \
-		{                                                 \
-			VS_OUTPUT_ERROR("Assertion failed: ", #expr); \
-			_DEBUG_BREAK;                                 \
-		}                                                 \
-	} while (0)
+#define _MACRO_BEG \
+	do             \
+	{
+#define _MACRO_END \
+	}              \
+	while (0)
 
-#define _ASSERT_MSG(expr, ...)                                         \
-	do                                                                 \
-	{                                                                  \
-		if (!(expr))                                                   \
-		{                                                              \
-			VS_OUTPUT_ERROR("Assertion failed: ", #expr, __VA_ARGS__); \
-			_DEBUG_BREAK;                                              \
-		}                                                              \
-	} while (0)
+#define _DEBUG_BREAK_IF_FALSE(expr, function) \
+	if (!(expr))                              \
+	{                                         \
+		function;                             \
+		_DEBUG_BREAK;                         \
+	}
 
-#define _ASSERT_RETURN(expr, ...) \
-	do                            \
-	{                             \
-		if (!(expr))              \
-		{                         \
-			_ASSERT(expr);        \
-			return __VA_ARGS__;   \
-		}                         \
-	} while (0)
+#define _ASSERT(expr)                                                          \
+	_MACRO_BEG                                                                 \
+	_DEBUG_BREAK_IF_FALSE(expr, _VS_OUTPUT_ERROR("Assertion failed: ", #expr)) \
+	_MACRO_END
+
+#define _ASSERT_MSG(expr, ...)                                                              \
+	_MACRO_BEG                                                                              \
+	_DEBUG_BREAK_IF_FALSE(expr, _VS_OUTPUT_ERROR("Assertion failed: ", #expr, __VA_ARGS__)) \
+	_MACRO_END
+
+#define _ASSERT_RETURN(expr, ...)                      \
+	_MACRO_BEG                                         \
+	if (!(expr))                                       \
+	{                                                  \
+		_VS_OUTPUT_ERROR("Assertion failed: ", #expr); \
+		_DEBUG_BREAK;                                  \
+		return __VA_ARGS__;                            \
+	}                                                  \
+	_MACRO_END
