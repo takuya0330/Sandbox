@@ -14,6 +14,7 @@
 #define _DEBUG_BREAK
 #endif
 
+// https://learn.microsoft.com/en-us/cpp/build/formatting-the-output-of-a-custom-build-step-or-build-event?view=msvc-170
 #define VS_OUTPUT_ERROR(...)   Log::Output(__FILE__, "(", __LINE__, "): ERROR: ", __FUNCSIG__, ": ", __VA_ARGS__)
 #define VS_OUTPUT_WARNING(...) Log::Output(__FILE__, "(", __LINE__, "): WARNING: ", __FUNCSIG__, ": ", __VA_ARGS__)
 
