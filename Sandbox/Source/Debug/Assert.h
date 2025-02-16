@@ -15,8 +15,11 @@
 #endif
 
 // https://learn.microsoft.com/en-us/cpp/build/formatting-the-output-of-a-custom-build-step-or-build-event?view=msvc-170
-#define _VS_OUTPUT_ERROR(...)   Log::Output(__FILE__, "(", __LINE__, "): ERROR: ", __FUNCSIG__, ": ", __VA_ARGS__)
-#define _VS_OUTPUT_WARNING(...) Log::Output(__FILE__, "(", __LINE__, "): WARNING: ", __FUNCSIG__, ": ", __VA_ARGS__)
+
+#define _VS_OUTPUT_FORMAT(level, ...) Log::Output(__FILE__, "(", __LINE__, "): ", #level, ": ", __FUNCSIG__, ": ", __VA_ARGS__)
+
+#define _VS_OUTPUT_ERROR(...)   _VS_OUTPUT_FORMAT(ERROR, __VA_ARGS__)
+#define _VS_OUTPUT_WARNING(...) _VS_OUTPUT_FORMAT(WARNING, __VA_ARGS__)
 
 #define _MACRO_BEG \
 	do             \
