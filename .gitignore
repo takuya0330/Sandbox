@@ -1,9 +1,7 @@
 # folder
 .vs
 x64
-asset
-bin
-external
+_old
 
 # file
 *.user
