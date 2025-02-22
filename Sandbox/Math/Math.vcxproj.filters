@@ -7,34 +7,34 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Types.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector2.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector4.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix2.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix3.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix4.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Math.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="Source\Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Math.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Matrix2.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Matrix3.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Matrix4.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Types.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vector2.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vector3.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vector4.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
