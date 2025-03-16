@@ -1,34 +1,38 @@
 ﻿#pragma once
 
-#include "Common.h"
+#include "Vec3.h"
+
+namespace RayTracing {
 
 class Ray
 {
 public:
 	Ray() = default;
 
-	Ray(const float3& origin, const float3& direction)
+	Ray(const Math::Float3& origin, const Math::Float3& direction)
 	    : m_origin(origin)
 	    , m_direction(direction)
 	{
 	}
 
-	float3 origin() const noexcept
+	Math::Float3 GetOrigin() const noexcept
 	{
 		return m_origin;
 	}
 
-	float3 direction() const noexcept
+	Math::Float3 GetDirection() const noexcept
 	{
 		return m_direction;
 	}
 
-	float3 at(float t) const noexcept
+	Math::Float3 At(float t) const noexcept
 	{
 		return m_origin + m_direction * t;
 	}
 
 private:
-	float3 m_origin;
-	float3 m_direction;
+	Math::Float3 m_origin;
+	Math::Float3 m_direction;
 };
+
+} // namespace RayTracing

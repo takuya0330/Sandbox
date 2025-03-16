@@ -5,18 +5,51 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="_External">
+      <UniqueIdentifier>{f76a8154-c679-4418-9317-4b50f08698cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_External\stb">
+      <UniqueIdentifier>{12870109-787e-412b-a256-953da427033c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Ray.h">
+    <ClCompile Include="Source\Hittable.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Material.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\_External\stb\stb_image.h">
+      <Filter>_External\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_External\stb\stb_image_write.h">
+      <Filter>_External\stb</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common.h">
       <Filter>Source</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\Main.cpp">
+    <ClInclude Include="Source\Vec3.h">
       <Filter>Source</Filter>
-    </ClCompile>
+    </ClInclude>
+    <ClInclude Include="Source\Ray.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Hittable.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Material.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Random.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
