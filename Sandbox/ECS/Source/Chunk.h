@@ -23,7 +23,7 @@ public:
     template<ComponentDataType T>
     const T* GetDataArray() const
     {
-		return reinterpret_cast<T*>(GetDataArray(GetComponentTypeId<T>()));
+		return reinterpret_cast<const T*>(GetDataArray(GetComponentTypeId<T>()));
     }
 
     template<ComponentDataType T>
