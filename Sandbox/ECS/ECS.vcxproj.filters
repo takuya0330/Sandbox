@@ -5,4 +5,20 @@
       <UniqueIdentifier>{471b8231-abec-4765-88b4-c1204102247f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\ComponentType.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TypeId.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TypeId.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>
