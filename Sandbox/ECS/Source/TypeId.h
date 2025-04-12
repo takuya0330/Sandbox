@@ -16,18 +16,18 @@ enum class TypeIdTag
 	kSystem,
 };
 
-template< TypeIdTag Tag >
+template<TypeIdTag Tag>
 struct TypeIdTraits
 {
 	static constexpr TypeIdTag kTag = Tag;
 };
 
-template< TypeIdTag Tag >
+template<TypeIdTag Tag>
 TypeId MakeTypeId() noexcept;
 
-template TypeId MakeTypeId< TypeIdTag::kComponent >() noexcept;
-template TypeId MakeTypeId< TypeIdTag::kSharedComponent >() noexcept;
-template TypeId MakeTypeId< TypeIdTag::kSystem >() noexcept;
+template TypeId MakeTypeId<TypeIdTag::kComponent>() noexcept;
+template TypeId MakeTypeId<TypeIdTag::kSharedComponent>() noexcept;
+template TypeId MakeTypeId<TypeIdTag::kSystem>() noexcept;
 
 } // namespace Internal
 } // namespace ECS
