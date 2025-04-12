@@ -17,6 +17,12 @@ enum class TypeIdTag
 };
 
 template< TypeIdTag Tag >
+struct TypeIdTraits
+{
+	static constexpr TypeIdTag kTag = Tag;
+};
+
+template< TypeIdTag Tag >
 TypeId MakeTypeId() noexcept;
 
 template TypeId MakeTypeId< TypeIdTag::kComponent >() noexcept;

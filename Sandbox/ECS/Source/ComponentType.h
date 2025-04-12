@@ -5,19 +5,10 @@
 #include "TypeId.h"
 
 namespace ECS {
-namespace Internal {
 
-template< TypeIdTag Tag >
-struct ComponentDataTraits
-{
-	static constexpr TypeIdTag kTag = Tag;
-};
+using IComponentData = Internal::TypeIdTraits< Internal::TypeIdTag::kComponent >;
 
-} // namespace Internal
-
-using IComponentData = Internal::ComponentDataTraits< Internal::TypeIdTag::kComponent >;
-
-using ISharedComponentData = Internal::ComponentDataTraits< Internal::TypeIdTag::kSharedComponent >;
+using ISharedComponentData = Internal::TypeIdTraits< Internal::TypeIdTag::kSharedComponent >;
 
 template< typename T >
 concept ComponentDataType = requires {
