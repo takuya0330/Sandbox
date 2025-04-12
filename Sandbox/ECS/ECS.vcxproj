@@ -128,15 +128,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\Main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Source\ComponentDataArray.h" />
-    <ClInclude Include="Source\EntityManager.h" />
-    <ClInclude Include="Source\Entity.h" />
-    <ClInclude Include="Source\TypeInfo.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
