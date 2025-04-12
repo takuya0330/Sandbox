@@ -10,23 +10,24 @@ AlignEscapedNewlines: Left
 AlignOperands: AlignAfterOperator
 AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: true
+AllowAllConstructorInitializersOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortLambdasOnASingleLine: None
 AllowShortEnumsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: InlineOnly
+AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: No
-BasedOnStyle: Google
 BinPackArguments: false
 BinPackParameters: false
 BitFieldColonSpacing: Both
 BraceWrapping: 
-  AfterCaseLabel: false
+  AfterCaseLabel: true
   AfterClass: true
   AfterControlStatement: true
   AfterEnum: true
@@ -34,17 +35,16 @@ BraceWrapping:
   AfterNamespace: false
   AfterObjCDeclaration: false
   AfterStruct: true
-  AfterUnion: true
-  AfterExternBlock: false
+  AfterUnion: false
+  AfterExternBlock: true
   BeforeCatch: true
   BeforeElse: true
   IndentBraces: false
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
-  BeforeLambdaBody: false
+  BeforeLambdaBody: true
   BeforeWhile: false
-BreakBeforeBinaryOperators: None
 BreakBeforeBraces: Custom
 BreakInheritanceList: BeforeComma
 BreakBeforeConceptDeclarations: true
@@ -73,7 +73,6 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 Language: Cpp
 NamespaceIndentation: None
 PointerAlignment: Left
-ReflowComments: false
 SortIncludes: true
 SortUsingDeclarations: false
 SpaceAfterCStyleCast: false
@@ -91,13 +90,13 @@ SpaceBeforeSquareBrackets: false
 SpaceInEmptyBlock: false
 SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
-SpacesInAngles: true
+SpacesInAngles: false
 SpacesInCStyleCastParentheses: false
 SpacesInConditionalStatement: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
-Standard: Latest
+Standard: c++20
 TabWidth: 4
-UseCRLF: true
+UseCRLF: false
 UseTab: ForIndentation
 ...
