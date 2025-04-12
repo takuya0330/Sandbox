@@ -39,6 +39,16 @@ struct ComponentType
 	TypeId id;
 	size_t size;
 	size_t alignment;
+
+    inline constexpr bool operator==(const ComponentType& c) const noexcept
+    {
+		return id == c.id && size == c.size && alignment == c.alignment;
+    }
+
+    inline constexpr bool operator!=(const ComponentType& c) const noexcept
+    {
+		return !(*this == c);
+    }
 };
 
 template< ComponentDataType T >
