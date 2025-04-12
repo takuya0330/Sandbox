@@ -2,30 +2,70 @@
 
 #include "ComponentType.h"
 
+struct A : ECS::IComponentData
+{
+	int value;
+};
+
+struct B : ECS::IComponentData
+{
+};
+
+struct C : ECS::IComponentData
+{
+};
+
+struct D : ECS::ISharedComponentData
+{
+};
+
+struct E : ECS::ISharedComponentData
+{
+};
+
+struct F : ECS::ISharedComponentData
+{
+	int values[100];
+};
+
 int main(int, char**)
 {
 	// 型識別子の重複チェック
 	if constexpr (1)
 	{
-		auto c0   = ECS::GetComponentTypeId< int8_t >();
-		auto c1   = ECS::GetComponentTypeId< int16_t >();
-		auto c2   = ECS::GetComponentTypeId< int32_t >();
-		auto c0_1 = ECS::GetComponentTypeId< int8_t >();
+		std::printf("--- [Test] TypeId ---\n");
 
-		std::printf("ComponentTypeId<int8> : 0x%08X\n", c0);
-		std::printf("ComponentTypeId<int16>: 0x%08X\n", c1);
-		std::printf("ComponentTypeId<int32>: 0x%08X\n", c2);
-		std::printf("ComponentTypeId<int8> : 0x%08X\n", c0_1);
+		const auto c0   = ECS::GetComponentTypeId< A >();
+		const auto c1   = ECS::GetComponentTypeId< B >();
+		const auto c2   = ECS::GetComponentTypeId< C >();
+		const auto c0_1 = ECS::GetComponentTypeId< A >();
 
-		auto sc0   = ECS::GetSharedComponentTypeId< int8_t >();
-		auto sc1   = ECS::GetSharedComponentTypeId< int16_t >();
-		auto sc2   = ECS::GetSharedComponentTypeId< int32_t >();
-		auto sc0_1 = ECS::GetSharedComponentTypeId< int8_t >();
+		std::printf("[IComponentData] ComponentTypeId<A>: 0x%08X\n", c0);
+		std::printf("[IComponentData] ComponentTypeId<B>: 0x%08X\n", c1);
+		std::printf("[IComponentData] ComponentTypeId<C>: 0x%08X\n", c2);
+		std::printf("[IComponentData] ComponentTypeId<A>: 0x%08X\n", c0_1);
 
-		std::printf("SharedComponentTypeId<int8> : 0x%08X\n", sc0);
-		std::printf("SharedComponentTypeId<int16>: 0x%08X\n", sc1);
-		std::printf("SharedComponentTypeId<int32>: 0x%08X\n", sc2);
-		std::printf("SharedComponentTypeId<int8> : 0x%08X\n", sc0_1);
+		const auto c3   = ECS::GetComponentTypeId< D >();
+		const auto c4   = ECS::GetComponentTypeId< E >();
+		const auto c5   = ECS::GetComponentTypeId< F >();
+		const auto c3_1 = ECS::GetComponentTypeId< D >();
+
+		std::printf("[ISharedComponentData] ComponentTypeId<D>: 0x%08X\n", c3);
+		std::printf("[ISharedComponentData] ComponentTypeId<E>: 0x%08X\n", c4);
+		std::printf("[ISharedComponentData] ComponentTypeId<F>: 0x%08X\n", c5);
+		std::printf("[ISharedComponentData] ComponentTypeId<D>: 0x%08X\n", c3_1);
+	}
+
+	// コンポーネント型テスト
+	if constexpr (1)
+	{
+		std::printf("--- [Test] ComponentType ---\n");
+
+		const auto a = ECS::GetComponentType< A >();
+		const auto f = ECS::GetComponentType< F >();
+
+		std::printf("A: id = 0x%08X, size = %llu, alignment = %llu\n", a.id, a.size, a.alignment);
+		std::printf("F: id = 0x%08X, size = %llu, alignment = %llu\n", f.id, f.size, f.alignment);
 	}
 
 	return 0;
