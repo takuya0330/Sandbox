@@ -29,5 +29,7 @@ template TypeId MakeTypeId<TypeIdTag::kComponent>() noexcept;
 template TypeId MakeTypeId<TypeIdTag::kSharedComponent>() noexcept;
 template TypeId MakeTypeId<TypeIdTag::kSystem>() noexcept;
 
+uint32_t GetTypeIndex(TypeId id) noexcept;
+
 } // namespace Internal
 } // namespace ECS

@@ -5,6 +5,12 @@
 #include <string_view>
 #include <type_traits>
 
+#define ECS_COMPONENT_DATA(Type)                         \
+	static constexpr std::string_view GetName() noexcept \
+	{                                                    \
+		return #Type;                                    \
+	}
+
 namespace ECS {
 namespace Internal {
 
@@ -23,12 +29,6 @@ template<typename T>
 static constexpr bool has_member_function_get_name_v = has_member_function_get_name<T>::value;
 
 } // namespace Internal
-
-#define ECS_COMPONENT_DATA(Type)                         \
-	static constexpr std::string_view GetName() noexcept \
-	{                                                    \
-		return #Type;                                    \
-	}
 
 using IComponentData = Internal::TypeIdTraits<Internal::TypeIdTag::kComponent>;
 
