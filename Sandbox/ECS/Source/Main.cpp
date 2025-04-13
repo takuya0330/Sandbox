@@ -112,48 +112,41 @@ int main(int, char**)
 
         ECS::Chunk ch0(&ar0);
 
-        if (auto v = ch0.GetData<Position>(0))
-        {
-			v->value[0] = 1;
-			v->value[1] = 1;
-			v->value[2] = 1;
-        }
-		if (auto v = ch0.GetData<Rotation>(0))
-		{
-			v->value[0] = 2;
-			v->value[1] = 2;
-			v->value[2] = 2;
-			v->value[3] = 2;
-		}
-		if (auto v = ch0.GetData<Scale>(0))
-		{
-			v->value[0] = 3;
-			v->value[1] = 3;
-			v->value[2] = 3;
-		}
-		if (auto v = ch0.GetData<Position>(1))
-		{
-			v->value[0] = 4;
-			v->value[1] = 4;
-			v->value[2] = 4;
-		}
+        auto p = ch0.GetDataArray<Position>();
+		auto r = ch0.GetDataArray<Rotation>();
+		auto s = ch0.GetDataArray<Scale>();
 
-        if (auto v = ch0.GetData<Position>(0))
-		{
-			std::printf("Position(0): %f, %f, %f\n", v->value[0], v->value[1], v->value[2]);
-		}
-		if (auto v = ch0.GetData<Rotation>(0))
-		{
-			std::printf("Rotation(0): %f, %f, %f, %f\n", v->value[0], v->value[1], v->value[2], v->value[3]);
-		}
-		if (auto v = ch0.GetData<Scale>(0))
-		{
-			std::printf("Scale(0): %f, %f, %f\n", v->value[0], v->value[1], v->value[2]);
-		}
-		if (auto v = ch0.GetData<Position>(1))
-		{
-			std::printf("Position(1): %f, %f, %f\n", v->value[0], v->value[1], v->value[2]);
-		}
+        for (uint32_t i = 0; i < ar0.GetMaxEntityCount(); ++i)
+        {
+			p[i].value[0] = static_cast<float>(i + 1);
+			p[i].value[1] = static_cast<float>(i + 1);
+			p[i].value[2] = static_cast<float>(i + 1);
+
+			r[i].value[0] = static_cast<float>(i + 2);
+			r[i].value[1] = static_cast<float>(i + 2);
+			r[i].value[2] = static_cast<float>(i + 2);
+			r[i].value[3] = static_cast<float>(i + 2);
+
+            s[i].value[0] = static_cast<float>(i + 3);
+			s[i].value[1] = static_cast<float>(i + 3);
+			s[i].value[2] = static_cast<float>(i + 3);
+        }
+
+        for (uint32_t i = 0; i < ar0.GetMaxEntityCount(); ++i)
+        {
+			if (auto v = ch0.GetData<Position>(i))
+			{
+				std::printf("Position(%u): %f, %f, %f\n", i, v->value[0], v->value[1], v->value[2]);
+			}
+			if (auto v = ch0.GetData<Rotation>(i))
+			{
+				std::printf("Rotation(%u): %f, %f, %f, %f\n", i, v->value[0], v->value[1], v->value[2], v->value[3]);
+			}
+			if (auto v = ch0.GetData<Scale>(i))
+			{
+				std::printf("Scale(%u)   : %f, %f, %f\n", i, v->value[0], v->value[1], v->value[2]);
+			}
+        }
 	}
 
 	return 0;

@@ -52,10 +52,10 @@ static const TypeId GetComponentTypeId() noexcept
 
 struct ComponentType
 {
+	const char* name;
 	TypeId      id;
 	size_t      size;
 	size_t      alignment;
-	const char* name;
 
 	inline constexpr bool operator==(const ComponentType& c) const noexcept
 	{
@@ -72,7 +72,10 @@ template<ComponentDataType T>
 const ComponentType GetComponentType() noexcept
 {
 	return {
-		GetComponentTypeId<T>(), sizeof(T), alignof(T), T::GetName().data()
+        T::GetName().data(),
+		GetComponentTypeId<T>(),
+        sizeof(T),
+        alignof(T)
 	};
 }
 

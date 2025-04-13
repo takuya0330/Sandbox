@@ -16,29 +16,29 @@ class Archetype
 public:
 	Archetype(std::initializer_list<ComponentType> components);
 
-	const size_t GetOffset(TypeId id) const;
+	const size_t GetMemoryOffset(TypeId id) const;
 
 	template<ComponentDataType T>
-	const size_t GetOffset() const
+	const size_t GetMemoryOffset() const
 	{
-		return GetOffset(GetComponentTypeId<T>());
+		return GetMemoryOffset(GetComponentTypeId<T>());
 	}
 
-    const size_t GetEntityCapacity() const noexcept
-    {
-		return m_entity_capacity;
-    }
-
-    const size_t GetMemorySize() const noexcept
+	const size_t GetMemorySize() const noexcept
 	{
 		return m_memory_size;
+	}
+
+	const size_t GetMaxEntityCount() const noexcept
+	{
+		return m_max_entity_count;
 	}
 
 private:
 	std::vector<ComponentType>         m_components;
 	std::unordered_map<size_t, size_t> m_offset_map;
 	size_t                             m_total_size;
-	size_t                             m_entity_capacity;
+	size_t                             m_max_entity_count;
 	size_t                             m_memory_size;
 };
 

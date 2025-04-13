@@ -17,7 +17,8 @@ Archetype::Archetype(std::initializer_list<ComponentType> components)
     : m_components(components)
     , m_offset_map()
     , m_total_size(0)
-    , m_entity_capacity(0)
+    , m_max_entity_count(0)
+    , m_memory_size(0)
 {
 	// 昇順にソート
 	std::sort(m_components.begin(), m_components.end(), [](const ComponentType& a, const ComponentType& b)
@@ -32,18 +33,18 @@ Archetype::Archetype(std::initializer_list<ComponentType> components)
 	    });
 
 	// チャンク内のエンティティの最大数
-	m_entity_capacity = kMaxChunkSize / m_total_size;
+	m_max_entity_count = kMaxChunkSize / m_total_size;
 
-	// メモリ内のオフセット位置を計算
+	// チャンク内のメモリオフセット位置とメモリ最大値を計算
 	for (const auto& it : m_components)
 	{
 		m_memory_size                               = alignup(m_memory_size, it.alignment);
 		m_offset_map[Internal::GetTypeIndex(it.id)] = m_memory_size;
-		m_memory_size += it.size * m_entity_capacity;
+		m_memory_size += it.size * m_max_entity_count;
 	}
 }
 
-const size_t Archetype::GetOffset(TypeId id) const
+const size_t Archetype::GetMemoryOffset(TypeId id) const
 {
 	const auto& it = m_offset_map.find(Internal::GetTypeIndex(id));
 	if (it == m_offset_map.end())
