@@ -1,7 +1,9 @@
 ﻿#include "Archetype.h"
 #include "Chunk.h"
 #include "ComponentType.h"
+#include "EntityManager.h"
 
+#include <cassert>
 #include <iostream>
 
 struct A : ECS::IComponentData
@@ -62,7 +64,7 @@ struct Scale : ECS::IComponentData
 int main(int, char**)
 {
 	// 型識別子の重複チェック
-	if constexpr (1)
+	if constexpr (0)
 	{
 		std::printf("--- [Test] TypeId ---\n");
 
@@ -88,7 +90,7 @@ int main(int, char**)
 	}
 
 	// コンポーネント型テスト
-	if constexpr (1)
+	if constexpr (0)
 	{
 		std::printf("--- [Test] ComponentType ---\n");
 
@@ -99,25 +101,24 @@ int main(int, char**)
 		std::printf("F: id = 0x%08X, size = %llu, alignment = %llu, name = %s\n", f.id, f.size, f.alignment, f.name);
 	}
 
-	// アーキタイプ/チャンクテスト
+	// アーキタイプ/チャンク/エンティティマネージャーテスト
 	if constexpr (1)
 	{
-		std::printf("--- [Test] Archetype/Chunk ---\n");
+		std::printf("--- [Test] Archetype/Chunk/EntityManager ---\n");
 
-		ECS::Archetype ar0({
-		    ECS::GetComponentType<Position>(),
-		    ECS::GetComponentType<Rotation>(),
-		    ECS::GetComponentType<Scale>(),
-		});
+		ECS::EntityManager em;
+		auto               ar1 = em.GetOrCreateArchetype<Position, Rotation, Scale>();
+		auto               ar2 = em.GetOrCreateArchetype<Rotation, Scale, Position>();
+		assert(ar1 == ar2);
 
-        ECS::Chunk ch0(&ar0);
+		ECS::Chunk ch0(ar2);
 
-        auto p = ch0.GetDataArray<Position>();
+		auto p = ch0.GetDataArray<Position>();
 		auto r = ch0.GetDataArray<Rotation>();
 		auto s = ch0.GetDataArray<Scale>();
 
-        for (uint32_t i = 0; i < ar0.GetMaxEntityCount(); ++i)
-        {
+		for (uint32_t i = 0; i < ar2->GetMaxEntityCount(); ++i)
+		{
 			p[i].value[0] = static_cast<float>(i + 1);
 			p[i].value[1] = static_cast<float>(i + 1);
 			p[i].value[2] = static_cast<float>(i + 1);
@@ -127,13 +128,13 @@ int main(int, char**)
 			r[i].value[2] = static_cast<float>(i + 2);
 			r[i].value[3] = static_cast<float>(i + 2);
 
-            s[i].value[0] = static_cast<float>(i + 3);
+			s[i].value[0] = static_cast<float>(i + 3);
 			s[i].value[1] = static_cast<float>(i + 3);
 			s[i].value[2] = static_cast<float>(i + 3);
-        }
+		}
 
-        for (uint32_t i = 0; i < ar0.GetMaxEntityCount(); ++i)
-        {
+		for (uint32_t i = 0; i < ar2->GetMaxEntityCount(); ++i)
+		{
 			if (auto v = ch0.GetData<Position>(i))
 			{
 				std::printf("Position(%u): %f, %f, %f\n", i, v->value[0], v->value[1], v->value[2]);
@@ -146,7 +147,7 @@ int main(int, char**)
 			{
 				std::printf("Scale(%u)   : %f, %f, %f\n", i, v->value[0], v->value[1], v->value[2]);
 			}
-        }
+		}
 	}
 
 	return 0;

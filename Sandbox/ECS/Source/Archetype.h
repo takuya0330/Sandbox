@@ -14,7 +14,19 @@ class Chunk;
 class Archetype
 {
 public:
-	Archetype(std::initializer_list<ComponentType> components);
+	Archetype(const std::vector<ComponentType>& components);
+
+    bool operator==(const Archetype& ar) const noexcept
+    {
+		return IsEqual(ar.m_components);
+    }
+
+    bool operator!=(const Archetype& ar) const noexcept
+    {
+		return !(*this == ar);
+    }
+
+    bool IsEqual(const std::vector<ComponentType>& components) const noexcept;
 
 	const size_t GetMemoryOffset(TypeId id) const;
 

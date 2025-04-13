@@ -3,6 +3,8 @@
 #include "Archetype.h"
 #include "Entity.h"
 
+#include <memory>
+
 namespace ECS {
 
 class EntityManager
@@ -34,15 +36,7 @@ public:
 	void DeleteEntity(const Entity& entity);
 
 private:
-	struct EntityData
-	{
-		Archetype* archetype;
-		Chunk*     chunk;
-		uint32_t   chunk_index;
-		uint32_t   version;
-	};
-
-private:
+	std::vector<std::unique_ptr<Archetype>> m_archetypes;
 };
 
 } // namespace ECS
