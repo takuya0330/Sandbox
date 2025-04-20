@@ -58,6 +58,9 @@ public:
 
 	void Finalize()
 	{
+		if (!m_memory)
+			return;
+
 		dump();
 		std::free(m_memory);
 	}
