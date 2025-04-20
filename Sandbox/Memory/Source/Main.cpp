@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <source_location>
 
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
@@ -15,38 +16,84 @@ public:
 	BlockAllocator()
 	    : m_memory(nullptr)
 	    , m_head(nullptr)
+	    , m_block_size(0)
+	    , m_block_alignment(0)
+	    , m_block_count(0)
+	    , m_meta_size(0)
 	{
 	}
 
 	bool Initialize(size_t size, size_t alignment, size_t count)
 	{
-		size_t aligned_size = Alignment(size, alignment);
+		m_block_size      = size;
+		m_block_alignment = alignment;
+		m_block_count     = count;
 
-		m_memory = std::malloc(aligned_size * count);
+#if defined(_DEBUG)
+		m_meta_size = Alignment(sizeof(Metadata), m_block_alignment);
+#endif
+
+		size_t aligned_size = Alignment(m_block_size, m_block_alignment) + m_meta_size;
+		m_memory            = std::malloc(aligned_size * m_block_count);
 		if (!m_memory)
 			return false;
 
-		for (size_t i = 0; i < count; ++i)
-			Deallocate(static_cast<Node*>(m_memory) + i * aligned_size);
+		auto base = reinterpret_cast<uint8_t*>(m_memory);
+		for (size_t i = 0; i < m_block_count; ++i)
+		{
+#if defined(_DEBUG)
+			auto meta  = reinterpret_cast<Metadata*>(base + i * aligned_size);
+			meta->used = false;
+			meta->file = "";
+			meta->line = -1;
+#endif
 
-        return true;
+			auto node  = reinterpret_cast<Node*>(base + i * aligned_size + m_meta_size);
+			node->next = m_head;
+			m_head     = node;
+		}
+
+		return true;
 	}
 
 	void Finalize()
 	{
+		dump();
 		std::free(m_memory);
 	}
 
-	void* Allocate()
+	void* Allocate(
+#if defined(_DEBUG)
+	    const std::source_location& location = std::source_location::current()
+#endif
+	)
 	{
-		auto node = m_head;
+		if (!m_head)
+			return nullptr;
+
+		auto p = reinterpret_cast<uint8_t*>(m_head);
+
+#if defined(_DEBUG)
+		auto meta  = reinterpret_cast<Metadata*>(p - m_meta_size);
+		meta->used = true;
+		meta->file = location.file_name();
+		meta->line = location.line();
+#endif
+
+		auto node = reinterpret_cast<Node*>(p);
 		m_head    = node->next;
+
 		return node;
 	}
 
 	void Deallocate(void* ptr)
 	{
-		auto node  = static_cast<Node*>(ptr);
+#if defined(_DEBUG)
+		auto meta  = reinterpret_cast<Metadata*>(reinterpret_cast<uint8_t*>(ptr) - m_meta_size);
+		meta->used = false;
+#endif
+
+		auto node  = reinterpret_cast<Node*>(reinterpret_cast<uint8_t*>(ptr));
 		node->next = m_head;
 		m_head     = node;
 	}
@@ -57,9 +104,37 @@ private:
 		Node* next;
 	};
 
+	struct Metadata
+	{
+		bool        used;
+		const char* file;
+		int         line;
+	};
+
 private:
-	void* m_memory;
-	Node* m_head;
+	void dump()
+	{
+#if defined(_DEBUG)
+        const auto base         = reinterpret_cast<const uint8_t*>(m_memory);
+		size_t     aligned_size = Alignment(m_block_size, m_block_alignment) + m_meta_size;
+		for (size_t i = 0; i < m_block_count; ++i)
+		{
+			const auto meta = reinterpret_cast<const Metadata*>(base + i * aligned_size);
+			if (meta->used)
+			{
+				std::cout << "[WARNING] " << meta->file << "(" << meta->line << "): Leaked!" << std::endl; 
+			}
+		}
+#endif
+	}
+
+private:
+	void*  m_memory;
+	Node*  m_head;
+	size_t m_block_size;
+	size_t m_block_alignment;
+	size_t m_block_count;
+	size_t m_meta_size;
 };
 
 int main(int, char**)
@@ -93,10 +168,10 @@ int main(int, char**)
 	std::cout << "address = " << p[3] << ", value = " << *p[3] << std::endl;
 	std::cout << "address = " << p[4] << ", value = " << *p[4] << std::endl;
 
-     for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < 4; ++i)
 		block.Deallocate(p[i]);
 
-    block.Finalize();
+	block.Finalize();
 
 	return 0;
 }
