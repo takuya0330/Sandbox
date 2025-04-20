@@ -104,12 +104,14 @@ private:
 		Node* next;
 	};
 
+#if defined(_DEBUG)
 	struct Metadata
 	{
 		bool        used;
 		const char* file;
 		int         line;
 	};
+#endif
 
 private:
 	void dump()
