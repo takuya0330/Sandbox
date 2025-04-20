@@ -3,44 +3,64 @@
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 
-struct Block
+template<typename T>
+constexpr T Alignment(T size, T align)
 {
-	Block* next = nullptr;
-};
-Block* g_head   = nullptr;
-void*  g_memory = nullptr;
+	return (size + (align - 1)) & ~(align - 1);
+}
 
-void initialize(size_t block_size, size_t block_count)
+class BlockAllocator
 {
-	g_memory = ::operator new(block_size * block_count);
-	g_head   = (Block*)g_memory;
-
-    auto heap = g_head;
-	for (size_t i = 1; i < block_count; ++i)
+public:
+	BlockAllocator()
+	    : m_memory(nullptr)
+	    , m_head(nullptr)
 	{
-		heap->next = (Block*)g_memory + i * block_size;
-		heap       = heap->next;
 	}
-}
 
-void finalize()
-{
-	::operator delete(g_memory);
-}
+	bool Initialize(size_t size, size_t alignment, size_t count)
+	{
+		size_t aligned_size = Alignment(size, alignment);
 
-void* allocate()
-{
-	auto block = g_head;
-	g_head     = block->next;
-	return block;
-}
+		m_memory = std::malloc(aligned_size * count);
+		if (!m_memory)
+			return false;
 
-void deallocate(void* ptr)
-{
-	auto block  = (Block*)ptr;
-	block->next = g_head;
-	g_head      = block;
-}
+		for (size_t i = 0; i < count; ++i)
+			Deallocate(static_cast<Node*>(m_memory) + i * aligned_size);
+
+        return true;
+	}
+
+	void Finalize()
+	{
+		std::free(m_memory);
+	}
+
+	void* Allocate()
+	{
+		auto node = m_head;
+		m_head    = node->next;
+		return node;
+	}
+
+	void Deallocate(void* ptr)
+	{
+		auto node  = static_cast<Node*>(ptr);
+		node->next = m_head;
+		m_head     = node;
+	}
+
+private:
+	struct Node
+	{
+		Node* next;
+	};
+
+private:
+	void* m_memory;
+	Node* m_head;
+};
 
 int main(int, char**)
 {
@@ -48,22 +68,35 @@ int main(int, char**)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	initialize(sizeof(int), 5);
+	BlockAllocator block;
+	if (!block.Initialize(sizeof(int), 16, 5))
+		return -1;
 
-	int* p[5];
-	for (int i = 0; i < 5; ++i)
-	{
-		p[i]  = new (allocate()) int;
-		*p[i] = i + 1;
-	}
+	int* p[5] = { 0 };
 
-    for (int i = 0; i < 5; ++i)
-		std::cout << *p[i] << std::endl;
+	p[0] = new (block.Allocate()) int(0);
+	p[1] = new (block.Allocate()) int(1);
+	p[2] = new (block.Allocate()) int(2);
 
-    for (int i = 0; i < 5; ++i)
-		deallocate(p[i]);
+	std::cout << "address = " << p[0] << ", value = " << *p[0] << std::endl;
+	std::cout << "address = " << p[1] << ", value = " << *p[1] << std::endl;
+	std::cout << "address = " << p[2] << ", value = " << *p[2] << std::endl;
 
-    finalize();
+	block.Deallocate(p[1]);
+	p[1] = nullptr;
+
+	p[1] = new (block.Allocate()) int(3);
+	p[3] = new (block.Allocate()) int(4);
+	p[4] = new (block.Allocate()) int(5);
+
+	std::cout << "address = " << p[1] << ", value = " << *p[1] << std::endl;
+	std::cout << "address = " << p[3] << ", value = " << *p[3] << std::endl;
+	std::cout << "address = " << p[4] << ", value = " << *p[4] << std::endl;
+
+     for (int i = 0; i < 5; ++i)
+		block.Deallocate(p[i]);
+
+    block.Finalize();
 
 	return 0;
 }
