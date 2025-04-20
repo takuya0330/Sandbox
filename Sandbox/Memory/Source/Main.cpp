@@ -16,24 +16,24 @@ public:
 	BlockAllocator()
 	    : m_memory(nullptr)
 	    , m_head(nullptr)
+	    , m_alignment(0)
 	    , m_block_size(0)
-	    , m_block_alignment(0)
 	    , m_block_count(0)
 	    , m_meta_size(0)
 	{
 	}
 
-	bool Initialize(size_t size, size_t alignment, size_t count)
+	bool Initialize(size_t alignment, size_t block_size, size_t block_count)
 	{
-		m_block_size      = size;
-		m_block_alignment = alignment;
-		m_block_count     = count;
+		m_alignment   = alignment;
+		m_block_size  = block_size;
+		m_block_count = block_count;
 
 #if defined(_DEBUG)
-		m_meta_size = Alignment(sizeof(Metadata), m_block_alignment);
+		m_meta_size = Alignment(sizeof(Metadata), m_alignment);
 #endif
 
-		size_t aligned_size = Alignment(m_block_size, m_block_alignment) + m_meta_size;
+		size_t aligned_size = Alignment(m_block_size, m_alignment) + m_meta_size;
 		m_memory            = std::malloc(aligned_size * m_block_count);
 		if (!m_memory)
 			return false;
@@ -43,9 +43,9 @@ public:
 		{
 #if defined(_DEBUG)
 			auto meta  = reinterpret_cast<Metadata*>(base + i * aligned_size);
-			meta->used = false;
 			meta->file = "";
 			meta->line = -1;
+			meta->used = false;
 #endif
 
 			auto node  = reinterpret_cast<Node*>(base + i * aligned_size + m_meta_size);
@@ -107,9 +107,9 @@ private:
 #if defined(_DEBUG)
 	struct Metadata
 	{
-		bool        used;
 		const char* file;
 		int         line;
+		bool        used;
 	};
 #endif
 
@@ -117,14 +117,14 @@ private:
 	void dump()
 	{
 #if defined(_DEBUG)
-        const auto base         = reinterpret_cast<const uint8_t*>(m_memory);
-		size_t     aligned_size = Alignment(m_block_size, m_block_alignment) + m_meta_size;
+		const auto base         = reinterpret_cast<const uint8_t*>(m_memory);
+		size_t     aligned_size = Alignment(m_block_size, m_alignment) + m_meta_size;
 		for (size_t i = 0; i < m_block_count; ++i)
 		{
 			const auto meta = reinterpret_cast<const Metadata*>(base + i * aligned_size);
 			if (meta->used)
 			{
-				std::cout << "[WARNING] " << meta->file << "(" << meta->line << "): Leaked!" << std::endl; 
+				std::cout << "[WARNING] " << meta->file << "(" << meta->line << "): Leaked!" << std::endl;
 			}
 		}
 #endif
@@ -133,8 +133,8 @@ private:
 private:
 	void*  m_memory;
 	Node*  m_head;
+	size_t m_alignment;
 	size_t m_block_size;
-	size_t m_block_alignment;
 	size_t m_block_count;
 	size_t m_meta_size;
 };
@@ -146,7 +146,7 @@ int main(int, char**)
 #endif
 
 	BlockAllocator block;
-	if (!block.Initialize(sizeof(int), 16, 5))
+	if (!block.Initialize(16, sizeof(int), 5))
 		return -1;
 
 	int* p[5] = { 0 };
@@ -170,8 +170,11 @@ int main(int, char**)
 	std::cout << "address = " << p[3] << ", value = " << *p[3] << std::endl;
 	std::cout << "address = " << p[4] << ", value = " << *p[4] << std::endl;
 
-	for (int i = 0; i < 4; ++i)
-		block.Deallocate(p[i]);
+	//block.Deallocate(p[0]);
+	block.Deallocate(p[1]);
+	block.Deallocate(p[2]);
+	//block.Deallocate(p[3]);
+	block.Deallocate(p[4]);
 
 	block.Finalize();
 
