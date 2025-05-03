@@ -12,27 +12,15 @@
 	}
 
 namespace ECS {
-namespace Internal {
-
-template<typename T>
-struct has_member_function_get_name
-{
-	template<typename X, int = (&X::GetName, 0)>
-	static std::true_type test(X*);
-
-	static std::false_type test(...);
-
-	static constexpr bool value = decltype(test((T*)nullptr))::value;
-};
-
-template<typename T>
-static constexpr bool has_member_function_get_name_v = has_member_function_get_name<T>::value;
-
-} // namespace Internal
 
 using IComponentData = Internal::TypeIdTraits<Internal::TypeIdTag::kComponent>;
 
 using ISharedComponentData = Internal::TypeIdTraits<Internal::TypeIdTag::kSharedComponent>;
+
+template<typename T>
+concept NameGetable = requires {
+	T::GetName();
+};
 
 template<typename T>
 concept ComponentDataType = requires {
@@ -40,7 +28,7 @@ concept ComponentDataType = requires {
 	requires std::is_trivial_v<T>;
 	requires std::is_trivially_destructible_v<T>;
 	requires std::is_move_constructible_v<T>;
-	requires Internal::has_member_function_get_name_v<T>;
+	requires NameGetable<T>;
 };
 
 template<ComponentDataType T>
