@@ -22,14 +22,15 @@ struct TypeIdTraits
 	static constexpr Metadata kMeta = Meta;
 };
 
-template<Metadata Tag>
-TypeId MakeTypeId() noexcept;
-
-template TypeId MakeTypeId<Metadata::kComponent>() noexcept;
-template TypeId MakeTypeId<Metadata::kSharedComponent>() noexcept;
-template TypeId MakeTypeId<Metadata::kSystem>() noexcept;
+TypeId MakeTypeId(Metadata meta) noexcept;
 
 uint32_t GetTypeIndex(TypeId id) noexcept;
+
+template<typename T>
+struct TypeIdResolver
+{
+	inline static const TypeId id = MakeTypeId(T::kMeta);
+};
 
 } // namespace Internal
 } // namespace ECS

@@ -64,7 +64,7 @@ struct Scale : ECS::IComponentData
 int main(int, char**)
 {
 	// 型識別子の重複チェック
-	if constexpr (0)
+	if constexpr (1)
 	{
 		std::printf("--- [Test] TypeId ---\n");
 
@@ -102,7 +102,7 @@ int main(int, char**)
 	}
 
 	// アーキタイプ/チャンク/エンティティマネージャーテスト
-	if constexpr (1)
+	if constexpr (0)
 	{
 		std::printf("--- [Test] Archetype/Chunk/EntityManager ---\n");
 

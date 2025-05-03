@@ -5,11 +5,10 @@
 namespace ECS {
 namespace Internal {
 
-template<Metadata Meta>
-TypeId MakeTypeId<Meta>() noexcept
+TypeId MakeTypeId(Metadata meta) noexcept
 {
 	static std::atomic<TypeId> id;
-	return id++ | static_cast<TypeId>(Meta) << 28; // 上位4ビットにタグを埋め込み
+	return id++ | static_cast<TypeId>(meta) << 28; // 上位4ビットにタグを埋め込み
 }
 
 uint32_t GetTypeIndex(TypeId id) noexcept

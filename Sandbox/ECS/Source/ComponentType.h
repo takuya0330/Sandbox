@@ -37,7 +37,7 @@ concept ComponentDataType = requires {
 template<ComponentDataType T>
 static const TypeId GetComponentTypeId() noexcept
 {
-	static const auto id = Internal::MakeTypeId<T::kMeta>();
+	static const auto id = Internal::TypeIdResolver<std::remove_cvref_t<T>>::id;
 	return id;
 }
 
