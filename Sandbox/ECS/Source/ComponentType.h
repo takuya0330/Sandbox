@@ -12,15 +12,18 @@
 	}
 
 namespace ECS {
-
-using IComponentData = Internal::TypeIdTraits<Internal::TypeIdTag::kComponent>;
-
-using ISharedComponentData = Internal::TypeIdTraits<Internal::TypeIdTag::kSharedComponent>;
+namespace Internal {
 
 template<typename T>
 concept NameGetable = requires {
 	T::GetName();
 };
+
+} // namespace Internal
+
+using IComponentData = Internal::TypeIdTraits<Internal::Metadata::kComponent>;
+
+using ISharedComponentData = Internal::TypeIdTraits<Internal::Metadata::kSharedComponent>;
 
 template<typename T>
 concept ComponentDataType = requires {
@@ -28,13 +31,13 @@ concept ComponentDataType = requires {
 	requires std::is_trivial_v<T>;
 	requires std::is_trivially_destructible_v<T>;
 	requires std::is_move_constructible_v<T>;
-	requires NameGetable<T>;
+	requires Internal::NameGetable<T>;
 };
 
 template<ComponentDataType T>
 static const TypeId GetComponentTypeId() noexcept
 {
-	static const auto id = Internal::MakeTypeId<T::kTag>();
+	static const auto id = Internal::MakeTypeId<T::kMeta>();
 	return id;
 }
 
@@ -60,10 +63,10 @@ template<ComponentDataType T>
 const ComponentType GetComponentType() noexcept
 {
 	return {
-        T::GetName().data(),
+		T::GetName().data(),
 		GetComponentTypeId<T>(),
-        sizeof(T),
-        alignof(T)
+		sizeof(T),
+		alignof(T)
 	};
 }
 
