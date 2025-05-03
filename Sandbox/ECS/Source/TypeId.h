@@ -9,25 +9,25 @@ using TypeId = uint32_t;
 
 namespace Internal {
 
-enum class TypeIdTag
+enum class Metadata
 {
 	kComponent = 1,
 	kSharedComponent,
 	kSystem,
 };
 
-template<TypeIdTag Tag>
+template<Metadata Meta>
 struct TypeIdTraits
 {
-	static constexpr TypeIdTag kTag = Tag;
+	static constexpr Metadata kMeta = Meta;
 };
 
-template<TypeIdTag Tag>
+template<Metadata Tag>
 TypeId MakeTypeId() noexcept;
 
-template TypeId MakeTypeId<TypeIdTag::kComponent>() noexcept;
-template TypeId MakeTypeId<TypeIdTag::kSharedComponent>() noexcept;
-template TypeId MakeTypeId<TypeIdTag::kSystem>() noexcept;
+template TypeId MakeTypeId<Metadata::kComponent>() noexcept;
+template TypeId MakeTypeId<Metadata::kSharedComponent>() noexcept;
+template TypeId MakeTypeId<Metadata::kSystem>() noexcept;
 
 uint32_t GetTypeIndex(TypeId id) noexcept;
 

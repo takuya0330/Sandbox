@@ -64,7 +64,7 @@ struct Scale : ECS::IComponentData
 int main(int, char**)
 {
 	// 型識別子の重複チェック
-	if constexpr (0)
+	if constexpr (1)
 	{
 		std::printf("--- [Test] TypeId ---\n");
 
@@ -73,20 +73,20 @@ int main(int, char**)
 		const auto c2   = ECS::GetComponentTypeId<C>();
 		const auto c0_1 = ECS::GetComponentTypeId<A>();
 
-		std::printf("[IComponentData] ComponentTypeId<A>: 0x%08X\n", c0);
-		std::printf("[IComponentData] ComponentTypeId<B>: 0x%08X\n", c1);
-		std::printf("[IComponentData] ComponentTypeId<C>: 0x%08X\n", c2);
-		std::printf("[IComponentData] ComponentTypeId<A>: 0x%08X\n", c0_1);
+		std::printf("[IComponentData] ComponentTypeId<A>: 0x%08X, GetTypeIndex<A>: %u\n", c0, ECS::Internal::GetTypeIndex(c0));
+		std::printf("[IComponentData] ComponentTypeId<B>: 0x%08X, GetTypeIndex<B>: %u\n", c1, ECS::Internal::GetTypeIndex(c1));
+		std::printf("[IComponentData] ComponentTypeId<C>: 0x%08X, GetTypeIndex<C>: %u\n", c2, ECS::Internal::GetTypeIndex(c2));
+		std::printf("[IComponentData] ComponentTypeId<A>: 0x%08X, GetTypeIndex<A>: %u\n", c0_1, ECS::Internal::GetTypeIndex(c0_1));
 
 		const auto c3   = ECS::GetComponentTypeId<D>();
 		const auto c4   = ECS::GetComponentTypeId<E>();
 		const auto c5   = ECS::GetComponentTypeId<F>();
 		const auto c3_1 = ECS::GetComponentTypeId<D>();
 
-		std::printf("[ISharedComponentData] ComponentTypeId<D>: 0x%08X\n", c3);
-		std::printf("[ISharedComponentData] ComponentTypeId<E>: 0x%08X\n", c4);
-		std::printf("[ISharedComponentData] ComponentTypeId<F>: 0x%08X\n", c5);
-		std::printf("[ISharedComponentData] ComponentTypeId<D>: 0x%08X\n", c3_1);
+		std::printf("[ISharedComponentData] ComponentTypeId<D>: 0x%08X, GetTypeIndex<D>: %u\n", c3, ECS::Internal::GetTypeIndex(c3));
+		std::printf("[ISharedComponentData] ComponentTypeId<E>: 0x%08X, GetTypeIndex<E>: %u\n", c4, ECS::Internal::GetTypeIndex(c4));
+		std::printf("[ISharedComponentData] ComponentTypeId<F>: 0x%08X, GetTypeIndex<F>: %u\n", c5, ECS::Internal::GetTypeIndex(c5));
+		std::printf("[ISharedComponentData] ComponentTypeId<D>: 0x%08X, GetTypeIndex<D>: %u\n", c3_1, ECS::Internal::GetTypeIndex(c3_1));
 	}
 
 	// コンポーネント型テスト
@@ -102,7 +102,7 @@ int main(int, char**)
 	}
 
 	// アーキタイプ/チャンク/エンティティマネージャーテスト
-	if constexpr (1)
+	if constexpr (0)
 	{
 		std::printf("--- [Test] Archetype/Chunk/EntityManager ---\n");
 
