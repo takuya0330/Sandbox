@@ -20,7 +20,7 @@ Archetype* EntityManager::GetOrCreateArchetype(std::initializer_list<ComponentTy
 	// 作成済みの場合は一致するものを返す
 	for (const auto& it : m_archetypes)
 	{
-		if (it->IsEqual(sorted_components))
+		if (*it == sorted_components)
 		{
 			return it.get();
 		}

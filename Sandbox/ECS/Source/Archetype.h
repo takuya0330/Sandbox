@@ -18,7 +18,7 @@ public:
 
     bool operator==(const Archetype& ar) const noexcept
     {
-		return IsEqual(ar.m_components);
+		return isEqual(ar.m_components);
     }
 
     bool operator!=(const Archetype& ar) const noexcept
@@ -26,7 +26,15 @@ public:
 		return !(*this == ar);
     }
 
-    bool IsEqual(const std::vector<ComponentType>& components) const noexcept;
+    bool operator==(const std::vector<ComponentType>& components) const noexcept
+	{
+		return isEqual(components);
+	}
+
+    bool operator!=(const std::vector<ComponentType>& components) const noexcept
+	{
+		return !(*this == components);
+	}
 
 	const size_t GetMemoryOffset(TypeId id) const;
 
@@ -45,6 +53,9 @@ public:
 	{
 		return m_max_entity_count;
 	}
+
+private:
+	bool isEqual(const std::vector<ComponentType>& components) const noexcept;
 
 private:
 	std::vector<ComponentType>         m_components;

@@ -37,11 +37,6 @@ Archetype::Archetype(const std::vector<ComponentType>& components)
 	}
 }
 
-bool Archetype::IsEqual(const std::vector<ComponentType>& components) const noexcept
-{
-	return std::equal(m_components.begin(), m_components.end(), components.begin(), components.end());
-}
-
 const size_t Archetype::GetMemoryOffset(TypeId id) const
 {
 	const auto& it = m_offset_map.find(Internal::GetTypeIndex(id));
@@ -49,6 +44,11 @@ const size_t Archetype::GetMemoryOffset(TypeId id) const
 		return -1;
 
 	return it->second;
+}
+
+bool Archetype::isEqual(const std::vector<ComponentType>& components) const noexcept
+{
+	return std::equal(m_components.begin(), m_components.end(), components.begin(), components.end());
 }
 
 } // namespace ECS
