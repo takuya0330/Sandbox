@@ -64,7 +64,7 @@ struct Scale : ECS::IComponentData
 int main(int, char**)
 {
 	// 型識別子の重複チェック
-	if constexpr (1)
+	if constexpr (0)
 	{
 		std::printf("--- [Test] TypeId ---\n");
 
@@ -149,6 +149,74 @@ int main(int, char**)
 			}
 		}
 	}
+
+    // エンティティテスト
+    if constexpr (1)
+    {
+		std::printf("--- [Test] Entity ---\n");
+
+		ECS::EntityManager em;
+		auto               ar1 = em.GetOrCreateArchetype<Position, Rotation, Scale>();
+		auto               e0  = em.CreateEntity(ar1);
+		auto               e1  = em.CreateEntity(ar1);
+		auto               e2  = em.CreateEntity(ar1);
+
+        int i = 0;
+        for (const auto& e : { e0, e1, e2 })
+        {
+			if (auto v = em.GetComponentData<Position>(e))
+            {
+				v->value[0] = static_cast<float>(i);
+				v->value[1] = static_cast<float>(i);
+				v->value[2] = static_cast<float>(i);
+				++i;
+            }
+			if (auto v = em.GetComponentData<Rotation>(e))
+			{
+				v->value[0] = static_cast<float>(i);
+				v->value[1] = static_cast<float>(i);
+				v->value[2] = static_cast<float>(i);
+				v->value[3] = static_cast<float>(i);
+				++i;
+			}
+			if (auto v = em.GetComponentData<Scale>(e))
+			{
+				v->value[0] = static_cast<float>(i);
+				v->value[1] = static_cast<float>(i);
+				v->value[2] = static_cast<float>(i);
+				++i;
+			}
+        }
+        for (const auto& e : { e0, e1, e2 })
+        {
+			std::printf("Entity(%u, %u)\n", e.index, e.version);
+            if (auto v = em.GetComponentData<Position>(e))
+            {
+				std::printf("Position: %f, %f, %f\n", v->value[0], v->value[1], v->value[2]);
+            }
+            if (auto v = em.GetComponentData<Rotation>(e))
+            {
+				std::printf("Rotation: %f, %f, %f, %f\n", v->value[0], v->value[1], v->value[2], v->value[3]);
+            }
+            if (auto v = em.GetComponentData<Scale>(e))
+            {
+				std::printf("Scale   : %f, %f, %f\n", v->value[0], v->value[1], v->value[2]);
+			}
+        }
+
+        std::printf("GetComponentDataArray\n");
+
+        const auto p = em.GetComponentDataArray<Position>();
+		const auto r = em.GetComponentDataArray<Rotation>();
+		const auto s = em.GetComponentDataArray<Scale>();
+
+		for (uint32_t i = 0; i < 3; ++i)
+		{
+			std::printf("Position(%u): %f, %f, %f\n", i, p[i].value[0], p[i].value[1], p[i].value[2]);
+			std::printf("Rotation(%u): %f, %f, %f, %f\n", i, r[i].value[0], r[i].value[1], r[i].value[2], r[i].value[3]);
+			std::printf("Scale(%u)   : %f, %f, %f\n", i, s[i].value[0], s[i].value[1], s[i].value[2]);
+		}
+    }
 
 	return 0;
 }

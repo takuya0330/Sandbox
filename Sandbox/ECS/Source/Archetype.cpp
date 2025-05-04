@@ -1,5 +1,7 @@
 ﻿#include "Archetype.h"
 
+#include "Chunk.h"
+
 #include <numeric>
 
 namespace ECS {
@@ -18,6 +20,7 @@ Archetype::Archetype(const std::vector<ComponentType>& components)
     , m_total_size(0)
     , m_max_entity_count(0)
     , m_memory_size(0)
+    , m_chunks()
 {
 	// コンポーネントサイズの合計
 	m_total_size = std::accumulate(m_components.begin(), m_components.end(), 0ull, [](size_t i, const ComponentType& c)
@@ -35,6 +38,20 @@ Archetype::Archetype(const std::vector<ComponentType>& components)
 		m_offset_map[Internal::GetTypeIndex(it.id)] = m_memory_size;
 		m_memory_size += it.size * m_max_entity_count;
 	}
+
+	m_chunks.emplace_back(std::make_unique<Chunk>(this));
+}
+
+Chunk* Archetype::GetOrCreateChunk()
+{
+	auto chunk = m_chunks.back().get();
+    if (chunk->IsFull())
+    {
+		m_chunks.emplace_back(std::make_unique<Chunk>(this));
+		chunk = m_chunks.back().get();
+    }
+
+    return chunk;
 }
 
 const size_t Archetype::GetMemoryOffset(TypeId id) const
