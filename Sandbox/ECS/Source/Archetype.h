@@ -37,7 +37,7 @@ public:
 		return !(*this == components);
 	}
 
-    Chunk* GetOrCreateChunk();
+	Chunk* GetOrCreateChunk();
 
 	const size_t GetMemoryOffset(TypeId id) const;
 
@@ -55,12 +55,12 @@ private:
 	bool isEqual(const std::vector<ComponentType>& components) const noexcept;
 
 private:
-	std::vector<ComponentType>          m_components;
-	std::unordered_map<size_t, size_t>  m_offset_map;
-	size_t                              m_total_size;
-	size_t                              m_max_entity_count;
-	size_t                              m_memory_size;
-	std::vector<std::unique_ptr<Chunk>> m_chunks;
+	std::vector<ComponentType>           m_components;
+	std::unordered_map<uint32_t, size_t> m_offset_map;
+	size_t                               m_total_size;
+	size_t                               m_max_entity_count;
+	size_t                               m_memory_size;
+	std::vector<std::unique_ptr<Chunk>>  m_chunks;
 };
 
 } // namespace ECS
