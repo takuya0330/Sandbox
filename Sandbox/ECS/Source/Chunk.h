@@ -13,9 +13,9 @@ class Chunk
 public:
 	Chunk(Archetype* archetype);
 
-    bool IsFull() const noexcept;
+	bool IsFull() const noexcept;
 
-    uint32_t IncEntityCount() noexcept;
+	uint32_t IncEntityCount() noexcept;
 
 	const uint8_t* GetDataArray(TypeId id) const;
 
@@ -25,7 +25,6 @@ public:
 	}
 
 private:
-
 	const Archetype*           m_parent;
 	std::unique_ptr<uint8_t[]> m_memory;
 	uint32_t                   m_entity_count;

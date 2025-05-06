@@ -111,7 +111,7 @@ int main(int, char**)
 		auto               ar2 = em.GetOrCreateArchetype<Rotation, Scale, Position>();
 		assert(ar1 == ar2);
 
-		ECS::Chunk ch0(ar2);
+		ECS::Chunk& ch0 = *ar2->GetOrCreateChunk();
 
 		const auto pid = ECS::GetComponentTypeId<Position>();
 		const auto rid = ECS::GetComponentTypeId<Rotation>();
