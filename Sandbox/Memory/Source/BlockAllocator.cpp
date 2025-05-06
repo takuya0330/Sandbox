@@ -77,12 +77,12 @@ void* BlockAllocator::Allocate(
 
 #if defined(_DEBUG)
 	auto meta  = reinterpret_cast<Metadata*>(p - m_meta_size);
-	meta->used = true;
 	meta->file = location.file_name();
 	meta->line = location.line();
+	meta->used = true;
 #endif
 
-	auto node = reinterpret_cast<Node*>(p);
+	auto node = m_head;
 	m_head    = node->next;
 
 	return node;
@@ -90,12 +90,14 @@ void* BlockAllocator::Allocate(
 
 void BlockAllocator::Deallocate(void* ptr)
 {
+	auto base = reinterpret_cast<uint8_t*>(ptr);
+
 #if defined(_DEBUG)
-	auto meta  = reinterpret_cast<Metadata*>(reinterpret_cast<uint8_t*>(ptr) - m_meta_size);
+	auto meta  = reinterpret_cast<Metadata*>(base - m_meta_size);
 	meta->used = false;
 #endif
 
-	auto node  = reinterpret_cast<Node*>(reinterpret_cast<uint8_t*>(ptr));
+	auto node  = reinterpret_cast<Node*>(base);
 	node->next = m_head;
 	m_head     = node;
 }
