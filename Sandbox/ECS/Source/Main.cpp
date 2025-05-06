@@ -102,7 +102,7 @@ int main(int, char**)
 	}
 
 	// アーキタイプ/チャンク/エンティティマネージャーテスト
-	if constexpr (0)
+	if constexpr (1)
 	{
 		std::printf("--- [Test] Archetype/Chunk/EntityManager ---\n");
 
@@ -113,9 +113,13 @@ int main(int, char**)
 
 		ECS::Chunk ch0(ar2);
 
-		auto p = ch0.GetDataArray<Position>();
-		auto r = ch0.GetDataArray<Rotation>();
-		auto s = ch0.GetDataArray<Scale>();
+		const auto pid = ECS::GetComponentTypeId<Position>();
+		const auto rid = ECS::GetComponentTypeId<Rotation>();
+		const auto sid = ECS::GetComponentTypeId<Scale>();
+
+		auto p = reinterpret_cast<Position*>(ch0.GetDataArray(pid));
+		auto r = reinterpret_cast<Rotation*>(ch0.GetDataArray(rid));
+		auto s = reinterpret_cast<Scale*>(ch0.GetDataArray(sid));
 
 		for (uint32_t i = 0; i < ar2->GetMaxEntityCount(); ++i)
 		{
@@ -135,24 +139,25 @@ int main(int, char**)
 
 		for (uint32_t i = 0; i < ar2->GetMaxEntityCount(); ++i)
 		{
-			if (auto v = ch0.GetData<Position>(i))
+			if (auto v = reinterpret_cast<Position*>(ch0.GetDataArray(pid)) + i)
 			{
 				std::printf("Position(%u): %f, %f, %f\n", i, v->value[0], v->value[1], v->value[2]);
 			}
-			if (auto v = ch0.GetData<Rotation>(i))
+			if (auto v = reinterpret_cast<Rotation*>(ch0.GetDataArray(rid)) + i)
 			{
 				std::printf("Rotation(%u): %f, %f, %f, %f\n", i, v->value[0], v->value[1], v->value[2], v->value[3]);
 			}
-			if (auto v = ch0.GetData<Scale>(i))
+			if (auto v = reinterpret_cast<Scale*>(ch0.GetDataArray(sid)) + i)
 			{
 				std::printf("Scale(%u)   : %f, %f, %f\n", i, v->value[0], v->value[1], v->value[2]);
 			}
 		}
 	}
 
-    // エンティティテスト
-    if constexpr (1)
-    {
+#if 0
+	// エンティティテスト
+	if constexpr (0)
+	{
 		std::printf("--- [Test] Entity ---\n");
 
 		ECS::EntityManager em;
@@ -161,16 +166,16 @@ int main(int, char**)
 		auto               e1  = em.CreateEntity(ar1);
 		auto               e2  = em.CreateEntity(ar1);
 
-        int i = 0;
-        for (const auto& e : { e0, e1, e2 })
-        {
+		int i = 0;
+		for (const auto& e : { e0, e1, e2 })
+		{
 			if (auto v = em.GetComponentData<Position>(e))
-            {
+			{
 				v->value[0] = static_cast<float>(i);
 				v->value[1] = static_cast<float>(i);
 				v->value[2] = static_cast<float>(i);
 				++i;
-            }
+			}
 			if (auto v = em.GetComponentData<Rotation>(e))
 			{
 				v->value[0] = static_cast<float>(i);
@@ -186,27 +191,27 @@ int main(int, char**)
 				v->value[2] = static_cast<float>(i);
 				++i;
 			}
-        }
-        for (const auto& e : { e0, e1, e2 })
-        {
+		}
+		for (const auto& e : { e0, e1, e2 })
+		{
 			std::printf("Entity(%u, %u)\n", e.index, e.version);
-            if (auto v = em.GetComponentData<Position>(e))
-            {
+			if (auto v = em.GetComponentData<Position>(e))
+			{
 				std::printf("Position: %f, %f, %f\n", v->value[0], v->value[1], v->value[2]);
-            }
-            if (auto v = em.GetComponentData<Rotation>(e))
-            {
+			}
+			if (auto v = em.GetComponentData<Rotation>(e))
+			{
 				std::printf("Rotation: %f, %f, %f, %f\n", v->value[0], v->value[1], v->value[2], v->value[3]);
-            }
-            if (auto v = em.GetComponentData<Scale>(e))
-            {
+			}
+			if (auto v = em.GetComponentData<Scale>(e))
+			{
 				std::printf("Scale   : %f, %f, %f\n", v->value[0], v->value[1], v->value[2]);
 			}
-        }
+		}
 
-        std::printf("GetComponentDataArray\n");
+		std::printf("GetComponentDataArray\n");
 
-        const auto p = em.GetComponentDataArray<Position>();
+		const auto p = em.GetComponentDataArray<Position>();
 		const auto r = em.GetComponentDataArray<Rotation>();
 		const auto s = em.GetComponentDataArray<Scale>();
 
@@ -216,7 +221,8 @@ int main(int, char**)
 			std::printf("Rotation(%u): %f, %f, %f, %f\n", i, r[i].value[0], r[i].value[1], r[i].value[2], r[i].value[3]);
 			std::printf("Scale(%u)   : %f, %f, %f\n", i, s[i].value[0], s[i].value[1], s[i].value[2]);
 		}
-    }
+	}
+#endif
 
 	return 0;
 }

@@ -41,14 +41,15 @@ public:
 
 	bool IsExistEntity(const Entity& entity) const noexcept;
 
-    template<ComponentDataType T>
+#if 0
+	template<ComponentDataType T>
 	const T* GetComponentDataArray() const
 	{
 		const auto& location = m_locations.at(0); // 先頭から取得
-		return location.chunk->GetData<T>(location.offset);
+		return location.chunk->GetDataArray<T>();
 	}
 
-    template<ComponentDataType T>
+	template<ComponentDataType T>
 	T* GetComponentDataArray()
 	{
 		return const_cast<T*>(std::as_const(*this).GetComponentDataArray<T>());
@@ -66,6 +67,7 @@ public:
 	{
 		return const_cast<T*>(std::as_const(*this).GetComponentData<T>(entity));
 	}
+#endif
 
 private:
 	struct EntityDataLocation
