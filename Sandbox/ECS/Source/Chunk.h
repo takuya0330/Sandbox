@@ -15,7 +15,7 @@ public:
 
 	bool IsFull() const noexcept;
 
-	uint32_t IncEntityCount() noexcept;
+	uint32_t AddEntityCount() noexcept;
 
 	const uint8_t* GetDataArray(TypeId id) const;
 

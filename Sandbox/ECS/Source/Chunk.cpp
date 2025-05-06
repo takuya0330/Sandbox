@@ -16,7 +16,7 @@ bool Chunk::IsFull() const noexcept
 	return m_entity_count >= m_parent->GetMaxEntityCount();
 }
 
-uint32_t Chunk::IncEntityCount() noexcept
+uint32_t Chunk::AddEntityCount() noexcept
 {
 	return m_entity_count++;
 }

@@ -57,7 +57,7 @@ Entity EntityManager::CreateEntity(Archetype* archetype)
 	auto& location     = m_locations.at(entity_index);
 	location.archetype = archetype;
 	location.chunk     = archetype->GetOrCreateChunk();
-	location.offset    = location.chunk->IncEntityCount();
+	location.offset    = location.chunk->AddEntityCount();
 
 	return { entity_index, location.version };
 }
