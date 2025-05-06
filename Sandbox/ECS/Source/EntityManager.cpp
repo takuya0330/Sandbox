@@ -45,7 +45,7 @@ Entity EntityManager::CreateEntity(Archetype* archetype)
 	if (m_free_indices.empty())
 	{
 		entity_index = static_cast<uint32_t>(m_locations.size());
-		m_locations.emplace_back(EntityDataLocation {});
+		m_locations.emplace_back(nullptr, nullptr, 0);
 	}
 	else
 	{
