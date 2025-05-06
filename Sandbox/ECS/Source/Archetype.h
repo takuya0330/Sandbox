@@ -41,12 +41,6 @@ public:
 
 	const size_t GetMemoryOffset(TypeId id) const;
 
-	template<ComponentDataType T>
-	const size_t GetMemoryOffset() const
-	{
-		return GetMemoryOffset(GetComponentTypeId<T>());
-	}
-
 	const size_t GetMemorySize() const noexcept
 	{
 		return m_memory_size;
