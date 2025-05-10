@@ -1,94 +1,53 @@
-﻿#include "Archetype.h"
-#include "Chunk.h"
-#include "ComponentType.h"
-#include "EntityManager.h"
+﻿#include "Include/ComponentData.h"
 
 #include <cassert>
 #include <iostream>
 
-struct A : ECS::IComponentData
-{
-	ECS_COMPONENT_DATA(A);
-
-	int value;
-};
-
-struct B : ECS::IComponentData
-{
-	ECS_COMPONENT_DATA(B);
-};
-
-struct C : ECS::IComponentData
-{
-	ECS_COMPONENT_DATA(C);
-};
-
-struct D : ECS::ISharedComponentData
-{
-	ECS_COMPONENT_DATA(D);
-};
-
-struct E : ECS::ISharedComponentData
-{
-	ECS_COMPONENT_DATA(E);
-};
-
-struct F : ECS::ISharedComponentData
-{
-	ECS_COMPONENT_DATA(F);
-
-	int values[100];
-};
-
 struct Position : ECS::IComponentData
 {
-	ECS_COMPONENT_DATA(Position);
-
 	float value[3];
 };
 
 struct Rotation : ECS::IComponentData
 {
-	ECS_COMPONENT_DATA(Rotation);
-
 	float value[4];
 };
 
 struct Scale : ECS::IComponentData
 {
-	ECS_COMPONENT_DATA(Scale);
-
 	float value[3];
 };
 
 int main(int, char**)
 {
 	// 型識別子の重複チェック
-	if constexpr (0)
+#if 1
 	{
-		std::printf("--- [Test] TypeId ---\n");
+		std::printf("[TEST] TypeId\n");
 
-		const auto c0   = ECS::GetComponentTypeId<A>();
-		const auto c1   = ECS::GetComponentTypeId<B>();
-		const auto c2   = ECS::GetComponentTypeId<C>();
-		const auto c0_1 = ECS::GetComponentTypeId<A>();
+        const ECS::TypeId pid1 = ECS::GetComponentDataTypeId<Position>();
+		const ECS::TypeId pid2 = ECS::GetComponentDataTypeId<const Position>();
+		const ECS::TypeId rid1 = ECS::GetComponentDataTypeId<Rotation>();
+		const ECS::TypeId sid1 = ECS::GetComponentDataTypeId<Scale>();
 
-		std::printf("[IComponentData] ComponentTypeId<A>: 0x%08X, GetTypeIndex<A>: %u\n", c0, ECS::Internal::GetTypeIndex(c0));
-		std::printf("[IComponentData] ComponentTypeId<B>: 0x%08X, GetTypeIndex<B>: %u\n", c1, ECS::Internal::GetTypeIndex(c1));
-		std::printf("[IComponentData] ComponentTypeId<C>: 0x%08X, GetTypeIndex<C>: %u\n", c2, ECS::Internal::GetTypeIndex(c2));
-		std::printf("[IComponentData] ComponentTypeId<A>: 0x%08X, GetTypeIndex<A>: %u\n", c0_1, ECS::Internal::GetTypeIndex(c0_1));
+		std::printf("[TEST] - Position: 0x%08X\n", pid1);
+		std::printf("[TEST] - Rotation: 0x%08X\n", rid1);
+		std::printf("[TEST] - Scale   : 0x%08X\n", sid1);
 
-		const auto c3   = ECS::GetComponentTypeId<D>();
-		const auto c4   = ECS::GetComponentTypeId<E>();
-		const auto c5   = ECS::GetComponentTypeId<F>();
-		const auto c3_1 = ECS::GetComponentTypeId<D>();
-
-		std::printf("[ISharedComponentData] ComponentTypeId<D>: 0x%08X, GetTypeIndex<D>: %u\n", c3, ECS::Internal::GetTypeIndex(c3));
-		std::printf("[ISharedComponentData] ComponentTypeId<E>: 0x%08X, GetTypeIndex<E>: %u\n", c4, ECS::Internal::GetTypeIndex(c4));
-		std::printf("[ISharedComponentData] ComponentTypeId<F>: 0x%08X, GetTypeIndex<F>: %u\n", c5, ECS::Internal::GetTypeIndex(c5));
-		std::printf("[ISharedComponentData] ComponentTypeId<D>: 0x%08X, GetTypeIndex<D>: %u\n", c3_1, ECS::Internal::GetTypeIndex(c3_1));
+        assert(pid1 == pid2);
+        assert(pid1 != rid1);
+        assert(pid1 != sid1);
+        assert(rid1 != sid1);
 	}
+#endif
 
+    // 型情報の取得
+#if 1
+    {
+    }
+#endif
+
+#if 0
 	// コンポーネント型テスト
 	if constexpr (0)
 	{
@@ -154,7 +113,6 @@ int main(int, char**)
 		}
 	}
 
-#if 0
 	// エンティティテスト
 	if constexpr (0)
 	{

@@ -4,42 +4,25 @@
     <Filter Include="Source">
       <UniqueIdentifier>{471b8231-abec-4765-88b4-c1204102247f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{1c58ce1d-d368-4817-8bb1-873c23f90f87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\ComponentType.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TypeId.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Archetype.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Chunk.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Entity.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EntityManager.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\Main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Source\TypeId.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Archetype.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EntityManager.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Chunk.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\TypeId.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ComponentData.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\TypeIdInternal.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

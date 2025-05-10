@@ -19,19 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Archetype.h" />
-    <ClInclude Include="Source\Chunk.h" />
-    <ClInclude Include="Source\ComponentType.h" />
-    <ClInclude Include="Source\Entity.h" />
-    <ClInclude Include="Source\EntityManager.h" />
-    <ClInclude Include="Source\TypeId.h" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Source\TypeId.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Archetype.cpp" />
-    <ClCompile Include="Source\Chunk.cpp" />
-    <ClCompile Include="Source\EntityManager.cpp" />
-    <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\TypeId.cpp" />
+    <ClInclude Include="Include\ComponentData.h" />
+    <ClInclude Include="Include\TypeId.h" />
+    <ClInclude Include="Include\TypeIdInternal.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
