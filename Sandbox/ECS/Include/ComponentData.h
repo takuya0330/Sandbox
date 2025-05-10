@@ -2,7 +2,14 @@
 
 #include "TypeId.h"
 
+#include <string_view>
 #include <type_traits>
+
+#define ECS_COMPONENT_DATA(Type)                             \
+	static constexpr std::string_view GetTypeName() noexcept \
+	{                                                        \
+		return #Type;                                        \
+	}
 
 namespace ECS {
 
@@ -15,6 +22,7 @@ concept ComponentDataType = requires {
 	requires std::is_trivial_v<T>;
 	requires std::is_trivially_destructible_v<T>;
 	requires std::is_move_constructible_v<T>;
+	T::GetTypeName();
 };
 
 //! \brief 全てのコンポーネントデータの基底構造体

@@ -5,16 +5,22 @@
 
 struct Position : ECS::IComponentData
 {
+	ECS_COMPONENT_DATA(Position);
+
 	float value[3];
 };
 
 struct Rotation : ECS::IComponentData
 {
+	ECS_COMPONENT_DATA(Rotation);
+
 	float value[4];
 };
 
 struct Scale : ECS::IComponentData
 {
+	ECS_COMPONENT_DATA(Scale);
+
 	float value[3];
 };
 
