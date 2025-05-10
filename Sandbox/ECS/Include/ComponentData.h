@@ -56,4 +56,16 @@ static const TypeId GetComponentDataTypeId() noexcept
 	return Internal::TypeIdResolver<std::remove_cvref_t<T>, Internal::TypeIdMetadata::kComponentData>::id;
 }
 
+//! \brief コンポーネントデータの型情報を取得
+template<ComponentDataType T>
+static const ComponentType GetComponentType() noexcept
+{
+	return {
+		T::GetTypeName().data(),
+		GetComponentDataTypeId<T>(),
+		sizeof(T),
+		alignof(T)
+	};
+}
+
 } // namespace ECS

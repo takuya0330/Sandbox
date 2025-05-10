@@ -44,12 +44,31 @@ int main(int, char**)
         assert(pid1 != rid1);
         assert(pid1 != sid1);
         assert(rid1 != sid1);
+
+        std::printf("\n");
 	}
 #endif
 
     // 型情報の取得
 #if 1
     {
+		std::printf("[TEST] ComponentType\n");
+
+        const ECS::ComponentType p1 = ECS::GetComponentType<Position>();
+		const ECS::ComponentType p2 = ECS::GetComponentType<const Position>();
+		const ECS::ComponentType r1 = ECS::GetComponentType<Rotation>();
+		const ECS::ComponentType s1 = ECS::GetComponentType<Scale>();
+
+        std::printf("[TEST] - Position: name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", p1.name, p1.id, p1.size, p1.alignment);
+		std::printf("[TEST] - Rotation: name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", r1.name, r1.id, r1.size, r1.alignment);
+		std::printf("[TEST] - Scale   : name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", s1.name, s1.id, s1.size, s1.alignment);
+
+        assert(p1 == p2);
+		assert(p1 != r1);
+		assert(p1 != s1);
+		assert(r1 != s1);
+
+        std::printf("\n");
     }
 #endif
 
