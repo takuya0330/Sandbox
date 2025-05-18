@@ -23,10 +23,10 @@ int main(int, char**)
 	{
 		std::printf("[TEST] TypeId\n");
 
-		const ECS::TypeId pid1 = ECS::ComponentDataTypeIdOf<Position>();
-		const ECS::TypeId pid2 = ECS::ComponentDataTypeIdOf<const Position>();
-		const ECS::TypeId rid1 = ECS::ComponentDataTypeIdOf<Rotation>();
-		const ECS::TypeId sid1 = ECS::ComponentDataTypeIdOf<Scale>();
+		constexpr ECS::TypeId pid1 = ECS::TypeIdOf<Position>();
+		constexpr ECS::TypeId pid2 = ECS::TypeIdOf<const Position>();
+		constexpr ECS::TypeId rid1 = ECS::TypeIdOf<Rotation>();
+		constexpr ECS::TypeId sid1 = ECS::TypeIdOf<Scale>();
 
 		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeNameOf<Position>(), pid1);
 		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeNameOf<Rotation>(), rid1);

@@ -49,19 +49,12 @@ struct ComponentType
 	}
 };
 
-//! \brief コンポーネントデータの一意な識別子を取得
-template<ComponentDataType T>
-static const TypeId ComponentDataTypeIdOf() noexcept
-{
-	return Internal::TypeIdResolver<std::remove_cvref_t<T>, Internal::TypeIdMetadata::kComponentData>::id;
-}
-
 //! \brief コンポーネントデータの型情報を取得
 template<ComponentDataType T>
 static const ComponentType GetComponentType() noexcept
 {
 	return {
-		ComponentDataTypeIdOf<T>(),
+		TypeIdOf<T>(),
 		sizeof(T),
 		alignof(T)
 	};
