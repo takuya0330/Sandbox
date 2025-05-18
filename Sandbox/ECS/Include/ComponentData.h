@@ -6,7 +6,7 @@
 #define ECS_DECLARE_COMPONENT_DATA(Type, ...)  \
 	struct Type : ECS::IComponentData          \
 	{                                          \
-		__VA_ARGS__;                           \
+		__VA_ARGS__                            \
 	};                                         \
 	constexpr std::string_view _name_of(Type*) \
 	{                                          \
@@ -35,9 +35,9 @@ struct IComponentData
 struct ComponentType
 {
 	const char* name;
-	TypeId id;
-	size_t size;
-	size_t alignment;
+	TypeId      id;
+	size_t      size;
+	size_t      alignment;
 
 	inline constexpr bool operator==(const ComponentType& c) const noexcept
 	{
