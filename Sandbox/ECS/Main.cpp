@@ -42,14 +42,14 @@ int main(int, char**)
 #endif
 
 	// 型情報の取得
-#if 0
+#if 1
     {
 		std::printf("[TEST] ComponentType\n");
 
-        const ECS::ComponentType p1 = ECS::GetComponentType<Position>();
-		const ECS::ComponentType p2 = ECS::GetComponentType<const Position>();
-		const ECS::ComponentType r1 = ECS::GetComponentType<Rotation>();
-		const ECS::ComponentType s1 = ECS::GetComponentType<Scale>();
+        constexpr ECS::ComponentType p1 = ECS::GetComponentType<Position>();
+		constexpr ECS::ComponentType p2 = ECS::GetComponentType<const Position>();
+		constexpr ECS::ComponentType r1 = ECS::GetComponentType<Rotation>();
+		constexpr ECS::ComponentType s1 = ECS::GetComponentType<Scale>();
 
         std::printf("[TEST] - Position: name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", p1.name, p1.id, p1.size, p1.alignment);
 		std::printf("[TEST] - Rotation: name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", r1.name, r1.id, r1.size, r1.alignment);

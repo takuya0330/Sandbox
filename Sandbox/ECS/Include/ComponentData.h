@@ -34,6 +34,7 @@ struct IComponentData
 //! \brief コンポーネントデータの型情報
 struct ComponentType
 {
+	const char* name;
 	TypeId id;
 	size_t size;
 	size_t alignment;
@@ -51,9 +52,10 @@ struct ComponentType
 
 //! \brief コンポーネントデータの型情報を取得
 template<ComponentDataType T>
-static const ComponentType GetComponentType() noexcept
+constexpr ComponentType GetComponentType() noexcept
 {
 	return {
+		TypeNameOf<T>(),
 		TypeIdOf<T>(),
 		sizeof(T),
 		alignof(T)
