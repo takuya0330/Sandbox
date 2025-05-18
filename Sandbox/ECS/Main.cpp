@@ -3,54 +3,46 @@
 #include <cassert>
 #include <iostream>
 
-struct Position : ECS::IComponentData
-{
-	ECS_COMPONENT_DATA(Position);
-
-	float value[3];
-};
-
-struct Rotation : ECS::IComponentData
-{
-	ECS_COMPONENT_DATA(Rotation);
-
-	float value[4];
-};
-
-struct Scale : ECS::IComponentData
-{
-	ECS_COMPONENT_DATA(Scale);
-
-	float value[3];
-};
+ECS_DECLARE_COMPONENT_DATA(
+    Position,
+    float value[3];
+);
+ECS_DECLARE_COMPONENT_DATA(
+    Rotation,
+    float value[4];
+);
+ECS_DECLARE_COMPONENT_DATA(
+    Scale,
+    float value[3];
+);
 
 int main(int, char**)
 {
-	// 型識別子の重複チェック
+	// 型識別子の重複チェック、型名の取得
 #if 1
 	{
 		std::printf("[TEST] TypeId\n");
 
-        const ECS::TypeId pid1 = ECS::GetComponentDataTypeId<Position>();
-		const ECS::TypeId pid2 = ECS::GetComponentDataTypeId<const Position>();
-		const ECS::TypeId rid1 = ECS::GetComponentDataTypeId<Rotation>();
-		const ECS::TypeId sid1 = ECS::GetComponentDataTypeId<Scale>();
+		const ECS::TypeId pid1 = ECS::ComponentDataTypeIdOf<Position>();
+		const ECS::TypeId pid2 = ECS::ComponentDataTypeIdOf<const Position>();
+		const ECS::TypeId rid1 = ECS::ComponentDataTypeIdOf<Rotation>();
+		const ECS::TypeId sid1 = ECS::ComponentDataTypeIdOf<Scale>();
 
-		std::printf("[TEST] - Position: 0x%08X\n", pid1);
-		std::printf("[TEST] - Rotation: 0x%08X\n", rid1);
-		std::printf("[TEST] - Scale   : 0x%08X\n", sid1);
+		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeNameOf<Position>(), pid1);
+		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeNameOf<Rotation>(), rid1);
+		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeNameOf<Scale>(), sid1);
 
-        assert(pid1 == pid2);
-        assert(pid1 != rid1);
-        assert(pid1 != sid1);
-        assert(rid1 != sid1);
+		assert(pid1 == pid2);
+		assert(pid1 != rid1);
+		assert(pid1 != sid1);
+		assert(rid1 != sid1);
 
-        std::printf("\n");
+		std::printf("\n");
 	}
 #endif
 
-    // 型情報の取得
-#if 1
+	// 型情報の取得
+#if 0
     {
 		std::printf("[TEST] ComponentType\n");
 

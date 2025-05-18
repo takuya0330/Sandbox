@@ -1,14 +1,16 @@
 ﻿#pragma once
 
 #include "TypeId.h"
+#include "TypeName.h"
 
-#include <string_view>
-#include <type_traits>
-
-#define ECS_COMPONENT_DATA(Type)                             \
-	static constexpr std::string_view GetTypeName() noexcept \
-	{                                                        \
-		return #Type;                                        \
+#define ECS_DECLARE_COMPONENT_DATA(Type, ...)  \
+	struct Type : ECS::IComponentData          \
+	{                                          \
+		__VA_ARGS__;                           \
+	};                                         \
+	constexpr std::string_view _name_of(Type*) \
+	{                                          \
+		return #Type;                          \
 	}
 
 namespace ECS {
@@ -22,7 +24,6 @@ concept ComponentDataType = requires {
 	requires std::is_trivial_v<T>;
 	requires std::is_trivially_destructible_v<T>;
 	requires std::is_move_constructible_v<T>;
-	T::GetTypeName();
 };
 
 //! \brief 全てのコンポーネントデータの基底構造体
@@ -33,10 +34,9 @@ struct IComponentData
 //! \brief コンポーネントデータの型情報
 struct ComponentType
 {
-	const char* name;
-	TypeId      id;
-	size_t      size;
-	size_t      alignment;
+	TypeId id;
+	size_t size;
+	size_t alignment;
 
 	inline constexpr bool operator==(const ComponentType& c) const noexcept
 	{
@@ -51,7 +51,7 @@ struct ComponentType
 
 //! \brief コンポーネントデータの一意な識別子を取得
 template<ComponentDataType T>
-static const TypeId GetComponentDataTypeId() noexcept
+static const TypeId ComponentDataTypeIdOf() noexcept
 {
 	return Internal::TypeIdResolver<std::remove_cvref_t<T>, Internal::TypeIdMetadata::kComponentData>::id;
 }
@@ -61,8 +61,7 @@ template<ComponentDataType T>
 static const ComponentType GetComponentType() noexcept
 {
 	return {
-		T::GetTypeName().data(),
-		GetComponentDataTypeId<T>(),
+		ComponentDataTypeIdOf<T>(),
 		sizeof(T),
 		alignof(T)
 	};

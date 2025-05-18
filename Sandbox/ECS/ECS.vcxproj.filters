@@ -24,5 +24,11 @@
     <ClInclude Include="Include\TypeIdInternal.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\TypeNameInternal.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\TypeName.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

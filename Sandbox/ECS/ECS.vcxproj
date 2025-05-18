@@ -24,6 +24,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\ComponentData.h" />
+    <ClInclude Include="Include\TypeName.h" />
+    <ClInclude Include="Include\TypeNameInternal.h" />
     <ClInclude Include="Include\TypeId.h" />
     <ClInclude Include="Include\TypeIdInternal.h" />
   </ItemGroup>
