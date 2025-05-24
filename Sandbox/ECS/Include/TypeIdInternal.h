@@ -35,7 +35,6 @@ struct type_counter
 	}
 };
 
-// std::remove_cvref_t のために別で定義
 template<typename T, auto Id = uint32_t()>
 constexpr uint32_t typeid_of_impl() noexcept
 {
