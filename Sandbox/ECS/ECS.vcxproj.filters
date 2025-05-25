@@ -12,6 +12,12 @@
     <ClCompile Include="Source\Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\EntityManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BlockAllocator.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Archetype.h">
@@ -30,6 +36,18 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\TypeNameInternal.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EntityManager.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Entity.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Chunk.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BlockAllocator.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
