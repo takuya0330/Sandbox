@@ -14,6 +14,9 @@ constexpr bool has_name_of_v = requires { has_name_of_t<T>(); };
 template<typename T>
 constexpr std::string_view name_of_impl()
 {
+#if _DEBUG
+	static_assert(has_name_of_v<T>,  "_name_of(T*) function not found.");
+#endif
 	if constexpr (has_name_of_v<T>)
 	{
 		return _name_of((T*)nullptr);
