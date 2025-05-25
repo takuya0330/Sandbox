@@ -58,7 +58,14 @@ public:
 	const T* GetComponentData(const Entity& entity) const
 	{
 		const auto& location = m_locations.at(entity.index);
-		return getComponentData<T>(location);
+		if (entity.index >= location.chunk->entity_count)
+			return nullptr;
+
+        const T* arr = reinterpret_cast<const T*>(getComponentDataArray(location, TypeIdOf<T>()));
+		if (!arr)
+			return nullptr;
+
+        return arr + location.offset;
 	}
 
 	template<ComponentDataType T>
@@ -84,17 +91,6 @@ private:
 	uint8_t* getComponentDataArray(const EntityDataLocation& location, TypeId id)
 	{
 		return const_cast<uint8_t*>(std::as_const(*this).getComponentDataArray(location, id));
-	}
-
-	template<ComponentDataType T>
-	const T* getComponentData(const EntityDataLocation& location) const
-	{
-		const T* arr = reinterpret_cast<const T*>(getComponentDataArray(location, TypeIdOf<T>()));
-		if (!arr)
-		{
-			return nullptr;
-		}
-		return arr + location.offset;
 	}
 
 private:
