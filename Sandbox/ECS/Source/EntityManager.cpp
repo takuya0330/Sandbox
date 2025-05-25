@@ -113,18 +113,18 @@ Chunk* EntityManager::getOrAllocateChunk(const Archetype* archetype)
 		return chunk;
 	};
 
-	auto chunk = m_chunks.find(archetype);
-	if (chunk == m_chunks.end())
+	auto it = m_chunks.find(archetype);
+	if (it == m_chunks.end())
 	{
 		return allocate(archetype);
 	}
 
-    if (chunk->second->entity_count >= archetype->GetEntityCapacity())
+    if (it->second->entity_count >= archetype->GetEntityCapacity())
 	{
 		return allocate(archetype);
 	}
 
-    return chunk->second;
+    return it->second;
 }
 
 const uint8_t* EntityManager::getComponentDataArray(const EntityDataLocation& location, TypeId id) const
