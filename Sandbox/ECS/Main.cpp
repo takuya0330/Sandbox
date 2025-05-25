@@ -1,20 +1,18 @@
-﻿#include "Include/ComponentData.h"
+﻿#include "Include/Archetype.h"
+#include "Include/ComponentData.h"
 
 #include <cassert>
 #include <iostream>
 
 ECS_DECLARE_COMPONENT_DATA(
     Position,
-    float value[3];
-);
+    float value[3];);
 ECS_DECLARE_COMPONENT_DATA(
     Rotation,
-    float value[4];
-);
+    float value[4];);
 ECS_DECLARE_COMPONENT_DATA(
     Scale,
-    float value[3];
-);
+    float value[3];);
 
 int main(int, char**)
 {
@@ -43,25 +41,45 @@ int main(int, char**)
 
 	// 型情報の取得
 #if 1
-    {
+	{
 		std::printf("[TEST] ComponentType\n");
 
-        constexpr ECS::ComponentType p1 = ECS::GetComponentType<Position>();
+		constexpr ECS::ComponentType p1 = ECS::GetComponentType<Position>();
 		constexpr ECS::ComponentType p2 = ECS::GetComponentType<const Position>();
 		constexpr ECS::ComponentType r1 = ECS::GetComponentType<Rotation>();
 		constexpr ECS::ComponentType s1 = ECS::GetComponentType<Scale>();
 
-        std::printf("[TEST] - Position: name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", p1.name, p1.id, p1.size, p1.alignment);
+		std::printf("[TEST] - Position: name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", p1.name, p1.id, p1.size, p1.alignment);
 		std::printf("[TEST] - Rotation: name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", r1.name, r1.id, r1.size, r1.alignment);
 		std::printf("[TEST] - Scale   : name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", s1.name, s1.id, s1.size, s1.alignment);
 
-        assert(p1 == p2);
+		assert(p1 == p2);
 		assert(p1 != r1);
 		assert(p1 != s1);
 		assert(r1 != s1);
 
-        std::printf("\n");
-    }
+		std::printf("\n");
+	}
+#endif
+
+#if 1
+	{
+		std::printf("[TEST] Archetype\n");
+
+		constexpr ECS::ComponentType p1 = ECS::GetComponentType<Position>();
+		constexpr ECS::ComponentType r1 = ECS::GetComponentType<Rotation>();
+		constexpr ECS::ComponentType s1 = ECS::GetComponentType<Scale>();
+
+		ECS::Archetype ar({ p1, r1, s1 });
+
+		std::printf("[TEST] - EntityCapacity = %llu\n", ar.GetEntityCapacity());
+		std::printf("[TEST] - ChunkSize = %llu\n", ar.GetChunkSize());
+		std::printf("[TEST] - %s: ChunkOffset = %llu\n", p1.name, ar.GetChunkOffset(p1.id));
+		std::printf("[TEST] - %s: ChunkOffset = %llu\n", r1.name, ar.GetChunkOffset(r1.id));
+		std::printf("[TEST] - %s: ChunkOffset = %llu\n", s1.name, ar.GetChunkOffset(s1.id));
+
+		std::printf("\n");
+	}
 #endif
 
 #if 0

@@ -10,6 +10,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Source\Archetype.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\TypeId.h">
@@ -25,6 +28,9 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\TypeName.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Archetype.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>
