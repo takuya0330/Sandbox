@@ -1,4 +1,4 @@
-﻿#include "../Include/Archetype.h"
+﻿#include "Archetype.h"
 
 #include <numeric>
 

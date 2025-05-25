@@ -4,34 +4,33 @@
     <Filter Include="Source">
       <UniqueIdentifier>{471b8231-abec-4765-88b4-c1204102247f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include">
-      <UniqueIdentifier>{1c58ce1d-d368-4817-8bb1-873c23f90f87}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Source\Archetype.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\TypeId.h">
-      <Filter>Include</Filter>
+    <ClInclude Include="Source\Archetype.h">
+      <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Include\ComponentData.h">
-      <Filter>Include</Filter>
+    <ClInclude Include="Source\ComponentData.h">
+      <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Include\TypeIdInternal.h">
-      <Filter>Include</Filter>
+    <ClInclude Include="Source\TypeId.h">
+      <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Include\TypeNameInternal.h">
-      <Filter>Include</Filter>
+    <ClInclude Include="Source\TypeIdInternal.h">
+      <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Include\TypeName.h">
-      <Filter>Include</Filter>
+    <ClInclude Include="Source\TypeName.h">
+      <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Archetype.h">
-      <Filter>Include</Filter>
+    <ClInclude Include="Source\TypeNameInternal.h">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

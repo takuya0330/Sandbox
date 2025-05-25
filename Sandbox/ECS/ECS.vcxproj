@@ -19,16 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Source\Archetype.cpp" />
+    <ClCompile Include="Source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Archetype.h" />
-    <ClInclude Include="Include\ComponentData.h" />
-    <ClInclude Include="Include\TypeName.h" />
-    <ClInclude Include="Include\TypeNameInternal.h" />
-    <ClInclude Include="Include\TypeId.h" />
-    <ClInclude Include="Include\TypeIdInternal.h" />
+    <ClInclude Include="Source\Archetype.h" />
+    <ClInclude Include="Source\ComponentData.h" />
+    <ClInclude Include="Source\TypeId.h" />
+    <ClInclude Include="Source\TypeIdInternal.h" />
+    <ClInclude Include="Source\TypeName.h" />
+    <ClInclude Include="Source\TypeNameInternal.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

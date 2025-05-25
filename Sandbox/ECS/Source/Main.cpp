@@ -1,5 +1,5 @@
-﻿#include "Include/Archetype.h"
-#include "Include/ComponentData.h"
+﻿#include "Archetype.h"
+#include "ComponentData.h"
 
 #include <cassert>
 #include <iostream>
