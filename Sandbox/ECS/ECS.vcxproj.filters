@@ -26,18 +26,6 @@
     <ClInclude Include="Source\ComponentData.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\TypeId.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TypeIdInternal.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TypeName.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TypeNameInternal.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\EntityManager.h">
       <Filter>Source</Filter>
     </ClInclude>
@@ -48,6 +36,9 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\BlockAllocator.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TypeInfo.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

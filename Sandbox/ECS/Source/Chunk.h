@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "TypeId.h"
-
 #include <memory>
 
 namespace ECS {
@@ -12,6 +10,7 @@ struct Chunk
 {
 	const Archetype* archetype;
 	uint32_t         entity_count;
+	uint32_t         allocator_index;
 
     const uint8_t* GetMemory() const
 	{

@@ -45,7 +45,7 @@ public:
 	const T* GetComponentDataArray() const
 	{
 		const auto& location = m_locations.at(0);
-		return reinterpret_cast<const T*>(getComponentDataArray(location, TypeIdOf<T>()));
+		return reinterpret_cast<const T*>(getComponentDataArray(location, TypeInfo<T>::GetTypeIndex()));
 	}
 
 	template<ComponentDataType T>
@@ -61,11 +61,11 @@ public:
 		if (entity.index >= location.chunk->entity_count)
 			return nullptr;
 
-        const T* arr = reinterpret_cast<const T*>(getComponentDataArray(location, TypeIdOf<T>()));
+		const T* arr = reinterpret_cast<const T*>(getComponentDataArray(location, TypeInfo<T>::GetTypeIndex()));
 		if (!arr)
 			return nullptr;
 
-        return arr + location.offset;
+		return arr + location.offset;
 	}
 
 	template<ComponentDataType T>
@@ -84,21 +84,20 @@ private:
 	};
 
 private:
-	Chunk* getOrAllocateChunk(const Archetype* archetype);
+	Chunk* allocateChunk(Archetype* archetype);
 
-	const uint8_t* getComponentDataArray(const EntityDataLocation& location, TypeId id) const;
+	const uint8_t* getComponentDataArray(const EntityDataLocation& location, TypeIndex index) const;
 
-	uint8_t* getComponentDataArray(const EntityDataLocation& location, TypeId id)
+	uint8_t* getComponentDataArray(const EntityDataLocation& location, TypeIndex index)
 	{
-		return const_cast<uint8_t*>(std::as_const(*this).getComponentDataArray(location, id));
+		return const_cast<uint8_t*>(std::as_const(*this).getComponentDataArray(location, index));
 	}
 
 private:
-	std::vector<std::unique_ptr<Archetype>>              m_archetypes;
-	std::vector<EntityDataLocation>                      m_locations;
-	std::queue<uint32_t>                                 m_free_indices;
-	std::unordered_map<const Archetype*, BlockAllocator> m_chunk_allocators;
-	std::unordered_map<const Archetype*, Chunk*>         m_chunks;
+	std::vector<std::unique_ptr<Archetype>> m_archetypes;
+	std::vector<EntityDataLocation>         m_locations;
+	std::queue<uint32_t>                    m_free_indices;
+	std::vector<BlockAllocator>             m_chunk_allocators;
 };
 
 } // namespace ECS

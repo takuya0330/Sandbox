@@ -1,47 +1,27 @@
 ﻿#pragma once
 
-#include "TypeId.h"
-#include "TypeName.h"
-
-#define ECS_DECLARE_COMPONENT_DATA(Type, ...)  \
-	struct Type : ECS::IComponentData          \
-	{                                          \
-		__VA_ARGS__                            \
-	};                                         \
-	constexpr std::string_view _name_of(Type*) \
-	{                                          \
-		return #Type;                          \
-	}
+#include "TypeInfo.h"
 
 namespace ECS {
-
-struct IComponentData;
 
 //! \brief 全てのコンポーネントデータの制約
 template<typename T>
 concept ComponentDataType = requires {
-	requires std::is_base_of_v<IComponentData, T>;
-	requires std::is_trivial_v<T>;
-	requires std::is_trivially_destructible_v<T>;
-	requires std::is_move_constructible_v<T>;
-};
-
-//! \brief 全てのコンポーネントデータの基底構造体
-struct IComponentData
-{
+	requires std::is_trivially_copyable_v<T>;
+	requires std::is_standard_layout_v<T>;
 };
 
 //! \brief コンポーネントデータの型情報
 struct ComponentType
 {
 	const char* name;
-	TypeId      id;
+	TypeIndex   index;
 	size_t      size;
 	size_t      alignment;
 
 	inline constexpr bool operator==(const ComponentType& c) const noexcept
 	{
-		return id == c.id && size == c.size && alignment == c.alignment;
+		return index == c.index && size == c.size && alignment == c.alignment;
 	}
 
 	inline constexpr bool operator!=(const ComponentType& c) const noexcept
@@ -55,8 +35,8 @@ template<ComponentDataType T>
 constexpr ComponentType GetComponentType() noexcept
 {
 	return {
-		TypeNameOf<T>(),
-		TypeIdOf<T>(),
+		TypeInfo<T>::GetTypeName().data(),
+		TypeInfo<T>::GetTypeIndex(),
 		sizeof(T),
 		alignof(T)
 	};

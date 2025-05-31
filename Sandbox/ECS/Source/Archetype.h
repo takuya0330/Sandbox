@@ -2,14 +2,19 @@
 
 #include "ComponentData.h"
 
+#include <deque>
 #include <memory>
 #include <unordered_map>
 #include <vector>
 
 namespace ECS {
 
+struct Chunk;
+
 class Archetype
 {
+	friend class EntityManager;
+
 public:
 	Archetype(const std::vector<ComponentType>& components);
 
@@ -33,7 +38,7 @@ public:
 		return !(*this == components);
 	}
 
-	const size_t GetChunkOffset(TypeId id) const;
+	const size_t GetChunkOffset(TypeIndex index) const;
 
 	const size_t GetChunkSize() const noexcept
 	{
@@ -49,11 +54,12 @@ private:
 	bool isEqual(const std::vector<ComponentType>& components) const noexcept;
 
 private:
-	std::vector<ComponentType>         m_components;
-	std::unordered_map<TypeId, size_t> m_chunk_offsets;
-	size_t                             m_total_size;
-	size_t                             m_entity_capacity;
-	size_t                             m_memory_size;
+	std::vector<ComponentType>            m_components;
+	std::unordered_map<TypeIndex, size_t> m_chunk_offsets;
+	size_t                                m_total_size;
+	size_t                                m_entity_capacity;
+	size_t                                m_memory_size;
+	std::deque<Chunk*>                    m_chunks;
 };
 
 } // namespace ECS

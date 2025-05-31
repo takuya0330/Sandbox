@@ -22,7 +22,7 @@ Archetype* EntityManager::GetOrCreateArchetype(std::initializer_list<ComponentTy
 	std::vector sorted_components(components);
 	std::sort(sorted_components.begin(), sorted_components.end(), [](const ComponentType& a, const ComponentType& b)
 	    {
-		    return a.id < b.id;
+		    return a.index < b.index;
 	    });
 
 	// 作成済みの場合は一致するものを返す
@@ -46,7 +46,7 @@ Entity EntityManager::CreateEntity(Archetype* archetype)
 	if (m_free_indices.empty())
 	{
 		entity_index = static_cast<uint32_t>(m_locations.size());
-		m_locations.emplace_back(archetype, getOrAllocateChunk(archetype), 0);
+		m_locations.emplace_back(archetype, allocateChunk(archetype), 0);
 	}
 	else
 	{
@@ -82,54 +82,51 @@ bool EntityManager::IsExistEntity(const Entity& entity) const noexcept
 	return true;
 }
 
-Chunk* EntityManager::getOrAllocateChunk(const Archetype* archetype)
+Chunk* EntityManager::allocateChunk(Archetype* archetype)
 {
-	auto allocate = [this](const Archetype* archetype) -> Chunk*
+	auto allocate = [this](Archetype* archetype) -> Chunk*
 	{
-		auto it = m_chunk_allocators.find(archetype);
-		if (it != m_chunk_allocators.end())
-		{
-			// チャンクが登録されていないのはおかしい
-			return nullptr;
-		}
-
 		BlockAllocator allocator;
-		if (!allocator.Initialize(16, sizeof(Chunk) + archetype->GetChunkSize(), 1024))
-		{
+        if (!allocator.Initialize(16, sizeof(Chunk) + archetype->GetChunkSize(), 1))
+        {
 			return nullptr;
-		}
+        }
 
-		auto chunk = reinterpret_cast<Chunk*>(allocator.Allocate());
+        auto chunk = reinterpret_cast<Chunk*>(allocator.Allocate());
 		if (!chunk)
 		{
 			return nullptr;
 		}
+		archetype->m_chunks.emplace_back(chunk);
 
-		chunk->archetype              = archetype;
-		chunk->entity_count           = 0;
-		m_chunk_allocators[archetype] = allocator;
-		m_chunks[archetype]           = chunk;
+		chunk->archetype       = archetype;
+		chunk->entity_count    = 0;
+		chunk->allocator_index = static_cast<uint32_t>(m_chunk_allocators.size());
 
-		return chunk;
+		m_chunk_allocators.emplace_back(allocator);
+
+        return chunk;
 	};
 
-	auto it = m_chunks.find(archetype);
-	if (it == m_chunks.end())
-	{
-		return allocate(archetype);
-	}
-
-    if (it->second->entity_count >= archetype->GetEntityCapacity())
-	{
-		return allocate(archetype);
-	}
-
-    return it->second;
+	Chunk* ret = nullptr;
+	if (archetype->m_chunks.empty())
+    {
+		ret = allocate(archetype);
+    }
+    else
+    {
+		ret = archetype->m_chunks.back();
+        if (ret->entity_count >= archetype->GetEntityCapacity())
+        {
+			ret = allocate(archetype);
+        }
+    }
+	return ret;
 }
 
-const uint8_t* EntityManager::getComponentDataArray(const EntityDataLocation& location, TypeId id) const
+const uint8_t* EntityManager::getComponentDataArray(const EntityDataLocation& location, TypeIndex index) const
 {
-	const auto offset = location.archetype->GetChunkOffset(id);
+	const auto offset = location.archetype->GetChunkOffset(index);
 	if (offset == -1)
 	{
 		return nullptr;

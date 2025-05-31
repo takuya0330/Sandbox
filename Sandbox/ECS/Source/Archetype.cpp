@@ -1,4 +1,5 @@
 ﻿#include "Archetype.h"
+#include "Chunk.h"
 
 #include <numeric>
 
@@ -20,6 +21,7 @@ Archetype::Archetype(const std::vector<ComponentType>& components)
     , m_total_size(0)
     , m_entity_capacity(0)
     , m_memory_size(0)
+    , m_chunks()
 {
 	// MEMO: components は既にソートされている前提
 
@@ -35,15 +37,15 @@ Archetype::Archetype(const std::vector<ComponentType>& components)
 	// チャンク内のメモリオフセット位置とメモリ最大値を計算
 	for (const auto& it : m_components)
 	{
-		m_memory_size          = alignup(m_memory_size, it.alignment);
-		m_chunk_offsets[it.id] = m_memory_size;
+		m_memory_size             = alignup(m_memory_size, it.alignment);
+		m_chunk_offsets[it.index] = m_memory_size;
 		m_memory_size += it.size * m_entity_capacity;
 	}
 }
 
-const size_t Archetype::GetChunkOffset(TypeId id) const
+const size_t Archetype::GetChunkOffset(TypeIndex index) const
 {
-	const auto& it = m_chunk_offsets.find(id);
+	const auto& it = m_chunk_offsets.find(index);
 	if (it == m_chunk_offsets.end())
 		return -1;
 

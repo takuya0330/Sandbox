@@ -5,33 +5,40 @@
 #include <cassert>
 #include <iostream>
 
-ECS_DECLARE_COMPONENT_DATA(
-    Position,
-    float value[3];);
-ECS_DECLARE_COMPONENT_DATA(
-    Rotation,
-    float value[4];);
-ECS_DECLARE_COMPONENT_DATA(
-    Scale,
-    float value[3];);
+struct Position
+{
+	float value[3];
+};
+ECS_TYPE_INFO(Position);
+
+struct Rotation
+{
+	float value[4];
+};
+ECS_TYPE_INFO(Rotation);
+
+struct Scale
+{
+	float value[3];
+};
+ECS_TYPE_INFO(Scale);
 
 int main(int, char**)
 {
 	// 型識別子の重複チェック、型名の取得
 #if 1
 	{
-		std::printf("[TEST] TypeId\n");
+		std::printf("[TEST] TypeIndex\n");
 
-		constexpr ECS::TypeId pid1 = ECS::TypeIdOf<Position>();
-		constexpr ECS::TypeId pid2 = ECS::TypeIdOf<const Position>();
-		constexpr ECS::TypeId rid1 = ECS::TypeIdOf<Rotation>();
-		constexpr ECS::TypeId sid1 = ECS::TypeIdOf<Scale>();
 
-		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeNameOf<Position>(), pid1);
-		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeNameOf<Rotation>(), rid1);
-		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeNameOf<Scale>(), sid1);
+		constexpr ECS::TypeIndex pid1 = ECS::TypeInfo<Position>::GetTypeIndex();
+		constexpr ECS::TypeIndex rid1 = ECS::TypeInfo<Rotation>::GetTypeIndex();
+		constexpr ECS::TypeIndex sid1 = ECS::TypeInfo<Scale>::GetTypeIndex();
 
-		assert(pid1 == pid2);
+		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeInfo<Position>::GetTypeName().data(), pid1);
+		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeInfo<Rotation>::GetTypeName().data(), rid1);
+		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeInfo<Scale>::GetTypeName().data(), sid1);
+
 		assert(pid1 != rid1);
 		assert(pid1 != sid1);
 		assert(rid1 != sid1);
@@ -46,15 +53,13 @@ int main(int, char**)
 		std::printf("[TEST] ComponentType\n");
 
 		constexpr ECS::ComponentType p1 = ECS::GetComponentType<Position>();
-		constexpr ECS::ComponentType p2 = ECS::GetComponentType<const Position>();
 		constexpr ECS::ComponentType r1 = ECS::GetComponentType<Rotation>();
 		constexpr ECS::ComponentType s1 = ECS::GetComponentType<Scale>();
 
-		std::printf("[TEST] - Position: name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", p1.name, p1.id, p1.size, p1.alignment);
-		std::printf("[TEST] - Rotation: name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", r1.name, r1.id, r1.size, r1.alignment);
-		std::printf("[TEST] - Scale   : name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", s1.name, s1.id, s1.size, s1.alignment);
+		std::printf("[TEST] - Position: name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", p1.name, p1.index, p1.size, p1.alignment);
+		std::printf("[TEST] - Rotation: name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", r1.name, r1.index, r1.size, r1.alignment);
+		std::printf("[TEST] - Scale   : name = %s, id = 0x%08X, size = %llu, alignment = %llu\n", s1.name, s1.index, s1.size, s1.alignment);
 
-		assert(p1 == p2);
 		assert(p1 != r1);
 		assert(p1 != s1);
 		assert(r1 != s1);
@@ -76,9 +81,9 @@ int main(int, char**)
 
 		std::printf("[TEST] - EntityCapacity = %llu\n", ar.GetEntityCapacity());
 		std::printf("[TEST] - ChunkSize = %llu\n", ar.GetChunkSize());
-		std::printf("[TEST] - %s: ChunkOffset = %llu\n", p1.name, ar.GetChunkOffset(p1.id));
-		std::printf("[TEST] - %s: ChunkOffset = %llu\n", r1.name, ar.GetChunkOffset(r1.id));
-		std::printf("[TEST] - %s: ChunkOffset = %llu\n", s1.name, ar.GetChunkOffset(s1.id));
+		std::printf("[TEST] - %s: ChunkOffset = %llu\n", p1.name, ar.GetChunkOffset(p1.index));
+		std::printf("[TEST] - %s: ChunkOffset = %llu\n", r1.name, ar.GetChunkOffset(r1.index));
+		std::printf("[TEST] - %s: ChunkOffset = %llu\n", s1.name, ar.GetChunkOffset(s1.index));
 
 		std::printf("\n");
 	}
