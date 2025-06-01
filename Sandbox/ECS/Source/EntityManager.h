@@ -38,7 +38,7 @@ public:
 
 	void DeleteEntity(const Entity& entity);
 
-	bool IsExistEntity(const Entity& entity) const noexcept;
+	bool IsEntityExists(const Entity& entity) const noexcept;
 
 	template<ComponentDataType T>
 	const T* GetComponentDataArray() const
