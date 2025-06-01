@@ -1,11 +1,10 @@
 ﻿#include "Archetype.h"
 
+#include <cassert>
 #include <numeric>
 
 namespace ECS {
 namespace {
-
-constexpr uint32_t kMaxChunkSize = 16 * 1024;
 
 constexpr size_t alignup(size_t value, size_t align)
 {
@@ -29,6 +28,7 @@ Archetype::Archetype(const std::vector<ComponentType>& components)
 	    {
 		    return i + alignup(c.size, c.alignment);
 	    });
+	assert(m_total_size < kMaxChunkSize);
 
 	// チャンク内のエンティティの最大数
 	m_entity_capacity = kMaxChunkSize / m_total_size;

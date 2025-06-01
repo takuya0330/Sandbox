@@ -1,6 +1,7 @@
 ﻿#include "EntityManager.h"
 
 #include <algorithm>
+#include <cassert>
 
 namespace ECS {
 
@@ -8,12 +9,15 @@ EntityManager::EntityManager()
     : m_archetypes()
     , m_locations()
     , m_free_entities()
-    , m_chunk_allocators()
+    , m_chunk_allocator()
 {
+	// TODO: block_count は外部から設定できるようにする
+	m_chunk_allocator.Initialize(16, kMaxChunkSize, 1024);
 }
 
 EntityManager::~EntityManager()
 {
+	m_chunk_allocator.Finalize();
 }
 
 Archetype* EntityManager::GetOrCreateArchetype(std::initializer_list<ComponentType> components)
@@ -50,9 +54,9 @@ Entity EntityManager::CreateEntity(Archetype* archetype)
 	}
 	else
 	{
-		e = m_free_entities.back();
+		e = m_free_entities.front();
 		++e.version;
-		m_free_entities.pop_back();
+		m_free_entities.pop_front();
 	}
 
 	auto& location  = m_locations.at(e.index);
@@ -76,43 +80,24 @@ bool EntityManager::IsEntityExists(const Entity& entity) const noexcept
 
 ComponentDataChunk* EntityManager::allocateChunk(Archetype* archetype)
 {
-	auto allocate = [this](Archetype* archetype) -> ComponentDataChunk*
-	{
-		BlockAllocator allocator;
-		if (!allocator.Initialize(16, sizeof(ComponentDataChunk) + archetype->GetChunkSize(), 1))
-        {
-			return nullptr;
-        }
-
-        auto chunk = reinterpret_cast<ComponentDataChunk*>(allocator.Allocate());
-		if (!chunk)
-		{
-			return nullptr;
-		}
-		archetype->m_chunks.emplace_back(chunk);
-
-		chunk->entity_count    = 0;
-		chunk->allocator_index = static_cast<uint32_t>(m_chunk_allocators.size());
-
-		m_chunk_allocators.emplace_back(allocator);
-
-        return chunk;
-	};
-
-	ComponentDataChunk* ret = nullptr;
+	ComponentDataChunk* chunk = nullptr;
 	if (archetype->m_chunks.empty())
-    {
-		ret = allocate(archetype);
-    }
-    else
-    {
-		ret = archetype->m_chunks.back();
-        if (ret->entity_count >= archetype->GetEntityCapacity())
-        {
-			ret = allocate(archetype);
-        }
-    }
-	return ret;
+	{
+		chunk               = m_chunk_allocator.Allocate<ComponentDataChunk>();
+		chunk->entity_count = 0;
+		archetype->m_chunks.emplace_back(chunk);
+	}
+	else
+	{
+		chunk = archetype->m_chunks.back();
+		if (chunk->entity_count >= archetype->GetEntityCapacity())
+		{
+			chunk               = m_chunk_allocator.Allocate<ComponentDataChunk>();
+			chunk->entity_count = 0;
+			archetype->m_chunks.emplace_back(chunk);
+		}
+	}
+	return chunk;
 }
 
 const uint8_t* EntityManager::getComponentDataArray(const EntityDataLocation& location, TypeIndex index) const

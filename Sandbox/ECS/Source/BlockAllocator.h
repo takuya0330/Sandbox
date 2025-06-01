@@ -17,6 +17,16 @@ public:
 #endif
 	);
 
+    template<typename T>
+    T* Allocate(
+#if defined(_DEBUG)
+        const std::source_location& location = std::source_location::current()
+#endif
+    )
+    {
+		return reinterpret_cast<T*>(Allocate(location));
+    }
+
 	void Deallocate(void* ptr);
 
 private:

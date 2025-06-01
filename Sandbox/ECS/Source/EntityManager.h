@@ -4,8 +4,6 @@
 #include "BlockAllocator.h"
 #include "Entity.h"
 
-#include <queue>
-
 namespace ECS {
 
 class EntityManager
@@ -94,8 +92,8 @@ private:
 private:
 	std::vector<std::unique_ptr<Archetype>> m_archetypes;
 	std::vector<EntityDataLocation>         m_locations;
-	std::vector<Entity>                     m_free_entities;
-	std::vector<BlockAllocator>             m_chunk_allocators;
+	std::deque<Entity>                      m_free_entities;
+	BlockAllocator                          m_chunk_allocator;
 };
 
 } // namespace ECS

@@ -4,6 +4,9 @@
 
 namespace ECS {
 
+//! \brief コンポーネントデータの最大チャンクサイズ
+static constexpr uint32_t kMaxChunkSize = 16 * 1024;
+
 //! \brief 全てのコンポーネントデータの制約
 template<typename T>
 concept ComponentDataType = requires {
@@ -11,11 +14,45 @@ concept ComponentDataType = requires {
 	requires std::is_standard_layout_v<T>;
 };
 
+template<ComponentDataType T>
+class ComponentDataArray
+{
+public:
+	ComponentDataArray(T* begin, size_t offset, size_t size) noexcept
+	    : m_begin(begin)
+	    , m_offset(offset)
+	    , m_size(size)
+	{
+	}
+
+    T* operator[](size_t index) noexcept
+    {
+        if (index >= m_size)
+			return nullptr;
+
+        return (m_begin + m_offset) + index;
+    }
+
+	T* begin() noexcept
+	{
+		return (m_begin + m_offset);
+	}
+
+    T* end() noexcept
+	{
+		return (m_begin + m_offset) + m_size;
+	}
+
+private:
+	T*     m_begin;
+	size_t m_offset;
+	size_t m_size;
+};
+
 //! \brief コンポーネントデータのメモリ領域
 struct ComponentDataChunk
 {
 	uint32_t entity_count;
-	uint32_t allocator_index;
 
 	const uint8_t* memory() const
 	{
