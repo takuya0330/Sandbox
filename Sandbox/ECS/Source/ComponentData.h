@@ -11,6 +11,23 @@ concept ComponentDataType = requires {
 	requires std::is_standard_layout_v<T>;
 };
 
+//! \brief コンポーネントデータのメモリ領域
+struct ComponentDataChunk
+{
+	uint32_t entity_count;
+	uint32_t allocator_index;
+
+	const uint8_t* memory() const
+	{
+		return (uint8_t*)this + sizeof(ComponentDataChunk);
+	}
+
+	uint8_t* memory()
+	{
+		return const_cast<uint8_t*>(std::as_const(*this).memory());
+	}
+};
+
 //! \brief コンポーネントデータの型情報
 struct ComponentType
 {

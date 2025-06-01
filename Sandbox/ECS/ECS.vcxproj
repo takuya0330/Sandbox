@@ -27,7 +27,6 @@
   <ItemGroup>
     <ClInclude Include="Source\Archetype.h" />
     <ClInclude Include="Source\BlockAllocator.h" />
-    <ClInclude Include="Source\Chunk.h" />
     <ClInclude Include="Source\ComponentData.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\EntityManager.h" />

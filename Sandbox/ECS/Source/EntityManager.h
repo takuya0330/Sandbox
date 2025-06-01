@@ -2,7 +2,6 @@
 
 #include "Archetype.h"
 #include "BlockAllocator.h"
-#include "Chunk.h"
 #include "Entity.h"
 
 #include <queue>
@@ -77,14 +76,14 @@ public:
 private:
 	struct EntityDataLocation
 	{
-		Archetype* archetype;
-		Chunk*     chunk;
-		uint32_t   offset;
-		uint32_t   version;
+		Archetype*          archetype;
+		ComponentDataChunk* chunk;
+		uint32_t            offset;
+		uint32_t            version;
 	};
 
 private:
-	Chunk* allocateChunk(Archetype* archetype);
+	ComponentDataChunk* allocateChunk(Archetype* archetype);
 
 	const uint8_t* getComponentDataArray(const EntityDataLocation& location, TypeIndex index) const;
 

@@ -1,5 +1,4 @@
 ﻿#include "Archetype.h"
-#include "Chunk.h"
 
 #include <numeric>
 

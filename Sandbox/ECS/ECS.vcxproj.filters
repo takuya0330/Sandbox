@@ -32,9 +32,6 @@
     <ClInclude Include="Source\Entity.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Chunk.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\BlockAllocator.h">
       <Filter>Source</Filter>
     </ClInclude>

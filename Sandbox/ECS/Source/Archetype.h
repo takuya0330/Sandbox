@@ -9,8 +9,6 @@
 
 namespace ECS {
 
-struct Chunk;
-
 class Archetype
 {
 	friend class EntityManager;
@@ -59,7 +57,7 @@ private:
 	size_t                                m_total_size;
 	size_t                                m_entity_capacity;
 	size_t                                m_memory_size;
-	std::deque<Chunk*>                    m_chunks;
+	std::deque<ComponentDataChunk*>       m_chunks;
 };
 
 } // namespace ECS

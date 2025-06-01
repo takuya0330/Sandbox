@@ -82,24 +82,23 @@ bool EntityManager::IsExistEntity(const Entity& entity) const noexcept
 	return true;
 }
 
-Chunk* EntityManager::allocateChunk(Archetype* archetype)
+ComponentDataChunk* EntityManager::allocateChunk(Archetype* archetype)
 {
-	auto allocate = [this](Archetype* archetype) -> Chunk*
+	auto allocate = [this](Archetype* archetype) -> ComponentDataChunk*
 	{
 		BlockAllocator allocator;
-        if (!allocator.Initialize(16, sizeof(Chunk) + archetype->GetChunkSize(), 1))
+		if (!allocator.Initialize(16, sizeof(ComponentDataChunk) + archetype->GetChunkSize(), 1))
         {
 			return nullptr;
         }
 
-        auto chunk = reinterpret_cast<Chunk*>(allocator.Allocate());
+        auto chunk = reinterpret_cast<ComponentDataChunk*>(allocator.Allocate());
 		if (!chunk)
 		{
 			return nullptr;
 		}
 		archetype->m_chunks.emplace_back(chunk);
 
-		chunk->archetype       = archetype;
 		chunk->entity_count    = 0;
 		chunk->allocator_index = static_cast<uint32_t>(m_chunk_allocators.size());
 
@@ -108,7 +107,7 @@ Chunk* EntityManager::allocateChunk(Archetype* archetype)
         return chunk;
 	};
 
-	Chunk* ret = nullptr;
+	ComponentDataChunk* ret = nullptr;
 	if (archetype->m_chunks.empty())
     {
 		ret = allocate(archetype);
@@ -132,7 +131,7 @@ const uint8_t* EntityManager::getComponentDataArray(const EntityDataLocation& lo
 		return nullptr;
 	}
 
-	return location.chunk->GetMemory() + offset;
+	return location.chunk->memory() + offset;
 }
 
 } // namespace ECS
