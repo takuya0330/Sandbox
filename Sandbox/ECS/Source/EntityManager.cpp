@@ -30,12 +30,13 @@ Archetype* EntityManager::GetOrCreateArchetype(std::initializer_list<ComponentTy
 	    });
 
 	// 作成済みの場合は一致するものを返す
-	for (const auto& it : m_archetypes)
-	{
-		if (*it == sorted_components)
-		{
-			return it.get();
-		}
+	const auto& it = std::find_if(m_archetypes.begin(), m_archetypes.end(), [&sorted_components](const std::unique_ptr<Archetype>& archetype)
+	    {
+		    return *archetype == sorted_components;
+	    });
+	if (it != m_archetypes.end())
+    {
+        return it->get();
 	}
 
 	// 新規作成
