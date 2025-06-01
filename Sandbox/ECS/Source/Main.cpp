@@ -1,6 +1,4 @@
-﻿#include "Archetype.h"
-#include "ComponentData.h"
-#include "EntityManager.h"
+﻿#include "EntityManager.h"
 
 #include <cassert>
 #include <iostream>
@@ -35,9 +33,9 @@ int main(int, char**)
 		constexpr ECS::TypeIndex rid1 = ECS::TypeInfo<Rotation>::GetTypeIndex();
 		constexpr ECS::TypeIndex sid1 = ECS::TypeInfo<Scale>::GetTypeIndex();
 
-		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeInfo<Position>::GetTypeName().data(), pid1);
-		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeInfo<Rotation>::GetTypeName().data(), rid1);
-		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeInfo<Scale>::GetTypeName().data(), sid1);
+		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeInfo<Position>::GetTypeName(), pid1);
+		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeInfo<Rotation>::GetTypeName(), rid1);
+		std::printf("[TEST] - %s: 0x%08X\n", ECS::TypeInfo<Scale>::GetTypeName(), sid1);
 
 		assert(pid1 != rid1);
 		assert(pid1 != sid1);

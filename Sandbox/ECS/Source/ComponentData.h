@@ -2,6 +2,9 @@
 
 #include "TypeInfo.h"
 
+#include <type_traits>
+#include <utility>
+
 namespace ECS {
 
 //! \brief コンポーネントデータの最大チャンクサイズ
@@ -25,20 +28,20 @@ public:
 	{
 	}
 
-    T* operator[](size_t index) noexcept
-    {
-        if (index >= m_size)
+	T* operator[](size_t index) noexcept
+	{
+		if (index >= m_size)
 			return nullptr;
 
-        return (m_begin + m_offset) + index;
-    }
+		return (m_begin + m_offset) + index;
+	}
 
 	T* begin() noexcept
 	{
 		return (m_begin + m_offset);
 	}
 
-    T* end() noexcept
+	T* end() noexcept
 	{
 		return (m_begin + m_offset) + m_size;
 	}
@@ -89,7 +92,7 @@ template<ComponentDataType T>
 constexpr ComponentType GetComponentType() noexcept
 {
 	return {
-		TypeInfo<T>::GetTypeName().data(),
+		TypeInfo<T>::GetTypeName(),
 		TypeInfo<T>::GetTypeIndex(),
 		sizeof(T),
 		alignof(T)

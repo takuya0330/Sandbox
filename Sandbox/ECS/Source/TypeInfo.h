@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <cstdint>
-#include <string_view>
 
 namespace ECS {
 namespace Internal {
@@ -53,7 +52,7 @@ using TypeIndex = uint32_t;
 template<typename T, typename = void>
 struct TypeInfo
 {
-	static constexpr std::string_view GetTypeName() noexcept
+	static constexpr const char* GetTypeName() noexcept
 	{
 		return "";
 	}
@@ -69,7 +68,7 @@ struct TypeInfo
 #define ECS_TYPE_INFO(Type)                                                                                  \
 	template<> struct ECS::TypeInfo<Type, std::enable_if_t<std::is_same_v<Type, std::remove_cvref_t<Type>>>> \
 	{                                                                                                        \
-		static constexpr std::string_view GetTypeName() noexcept                                             \
+		static constexpr const char* GetTypeName() noexcept                                                  \
 		{                                                                                                    \
 			return #Type;                                                                                    \
 		}                                                                                                    \
