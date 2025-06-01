@@ -7,7 +7,7 @@ namespace ECS {
 EntityManager::EntityManager()
     : m_archetypes()
     , m_locations()
-    , m_free_indices()
+    , m_free_entities()
     , m_chunk_allocators()
 {
 }
@@ -42,44 +42,36 @@ Archetype* EntityManager::GetOrCreateArchetype(std::initializer_list<ComponentTy
 
 Entity EntityManager::CreateEntity(Archetype* archetype)
 {
-	uint32_t entity_index = 0;
-	if (m_free_indices.empty())
+	Entity e = { 0, 0 };
+	if (m_free_entities.empty())
 	{
-		entity_index = static_cast<uint32_t>(m_locations.size());
+		e.index = static_cast<uint32_t>(m_locations.size());
 		m_locations.emplace_back(archetype, allocateChunk(archetype), 0);
 	}
 	else
 	{
-		entity_index = m_free_indices.front();
-		m_free_indices.pop();
-		++m_locations.at(entity_index).version;
+		e = m_free_entities.back();
+		++e.version;
+		m_free_entities.pop_back();
 	}
 
-	auto& location  = m_locations.at(entity_index);
+	auto& location  = m_locations.at(e.index);
 	location.offset = location.chunk->entity_count++;
 
-	return { entity_index, location.version };
+	return e;
 }
 
 void EntityManager::DeleteEntity(const Entity& entity)
 {
-	m_free_indices.push(entity.index);
+	m_free_entities.emplace_back(entity.index);
 }
 
 bool EntityManager::IsExistEntity(const Entity& entity) const noexcept
 {
-	if (m_free_indices.empty())
+	if (m_free_entities.empty())
 		return true;
 
-	for (const auto& it : m_free_indices._Get_container())
-	{
-		if (it != entity.index)
-			continue;
-
-		return false;
-	}
-
-	return true;
+	return std::find(m_free_entities.begin(), m_free_entities.end(), entity) == m_free_entities.end();
 }
 
 ComponentDataChunk* EntityManager::allocateChunk(Archetype* archetype)

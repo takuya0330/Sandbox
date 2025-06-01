@@ -79,7 +79,6 @@ private:
 		Archetype*          archetype;
 		ComponentDataChunk* chunk;
 		uint32_t            offset;
-		uint32_t            version;
 	};
 
 private:
@@ -95,7 +94,7 @@ private:
 private:
 	std::vector<std::unique_ptr<Archetype>> m_archetypes;
 	std::vector<EntityDataLocation>         m_locations;
-	std::queue<uint32_t>                    m_free_indices;
+	std::vector<Entity>                     m_free_entities;
 	std::vector<BlockAllocator>             m_chunk_allocators;
 };
 
