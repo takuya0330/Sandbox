@@ -68,7 +68,7 @@ Entity EntityManager::CreateEntity(Archetype* archetype)
 
 void EntityManager::DeleteEntity(const Entity& entity)
 {
-	m_free_entities.emplace_back(entity.index);
+	m_free_entities.emplace_back(entity);
 }
 
 bool EntityManager::IsEntityExists(const Entity& entity) const noexcept
