@@ -28,7 +28,6 @@ int main(int, char**)
 	{
 		std::printf("[TEST] TypeIndex\n");
 
-
 		constexpr ECS::TypeIndex pid1 = ECS::TypeInfo<Position>::GetTypeIndex();
 		constexpr ECS::TypeIndex rid1 = ECS::TypeInfo<Rotation>::GetTypeIndex();
 		constexpr ECS::TypeIndex sid1 = ECS::TypeInfo<Scale>::GetTypeIndex();
