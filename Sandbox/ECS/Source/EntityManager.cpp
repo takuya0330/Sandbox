@@ -62,6 +62,17 @@ std::weak_ptr<EntityArchetype> EntityManager::GetOrCreateArchetype(std::initiali
 	    });
 	if (it != m_archetypes.end())
 	{
+		// チャンクの容量を確認
+		// ここで見つかったアーキタイプはチャンクを1つ以上所持している前提
+		auto& chunk = (*it)->chunks.back();
+		if (chunk.entity_count >= (*it)->entity_capacity)
+		{
+			// チャンクがいっぱいなら新しいチャンクを作成
+			(*it)->chunks.emplace_back();
+			auto& new_chunk        = (*it)->chunks.back();
+			new_chunk.buffer       = std::make_unique<uint8_t[]>((*it)->chunk_size);
+			new_chunk.entity_count = 0;
+		}
 		return *it;
 	}
 
@@ -111,8 +122,8 @@ std::weak_ptr<EntityArchetype> EntityManager::GetOrCreateArchetype(std::initiali
 
 Entity EntityManager::CreateEntity(std::weak_ptr<EntityArchetype> archetype)
 {
-	auto ar = archetype.lock();
-	if (ar == nullptr)
+	auto locked_archetype = archetype.lock();
+	if (locked_archetype == nullptr)
 	{
 		return kInvalidEntity;
 	}
@@ -131,8 +142,8 @@ Entity EntityManager::CreateEntity(std::weak_ptr<EntityArchetype> archetype)
 	}
 
 	auto& location        = m_locations.at(GetEntityIndex(entity));
-	location.archetype    = ar.get();
-	location.chunk        = &ar->chunks.back();
+	location.archetype    = locked_archetype.get();
+	location.chunk        = &locked_archetype->chunks.back();
 	location.chunk_offset = location.chunk->entity_count++;
 
 	return entity;
