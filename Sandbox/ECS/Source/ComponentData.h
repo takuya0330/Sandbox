@@ -18,40 +18,6 @@ concept ComponentDataType = requires {
 	requires std::is_standard_layout_v<T>;
 };
 
-//! \brief 特定の型のコンポーネントデータ配列
-template<ComponentDataType T>
-class ComponentDataArray
-{
-public:
-	ComponentDataArray(T* begin, size_t size) noexcept
-	    : m_begin(begin)
-	    , m_size(size)
-	{
-	}
-
-	T* operator[](size_t index) noexcept
-	{
-		if (index >= m_size)
-			return nullptr;
-
-		return m_begin + index;
-	}
-
-	T* begin() noexcept
-	{
-		return m_begin;
-	}
-
-	T* end() noexcept
-	{
-		return m_begin + m_size;
-	}
-
-private:
-	T*     m_begin;
-	size_t m_size;
-};
-
 //! \brief コンポーネントデータチャンク
 struct ComponentDataChunk
 {

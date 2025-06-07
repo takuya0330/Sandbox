@@ -1,10 +1,17 @@
 ﻿#pragma once
 
-#include "Entity.h"
+#include "ComponentDataGroup.h"
 
 #include <deque>
 
 namespace ECS {
+
+struct EntityDataLocation
+{
+	EntityArchetype*    archetype;
+	ComponentDataChunk* chunk;
+	uint32_t            chunk_offset;
+};
 
 class EntityManager
 {
@@ -37,16 +44,6 @@ public:
 	void DeleteEntity(Entity entity);
 
 	bool IsEntityExists(Entity entity) const noexcept;
-
-private:
-	struct EntityDataLocation
-	{
-		EntityArchetype*    archetype;
-		ComponentDataChunk* chunk;
-		uint32_t            chunk_offset;
-	};
-
-private:
 
 private:
 	std::list<std::shared_ptr<EntityArchetype>> m_archetypes;
