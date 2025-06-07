@@ -1,23 +1,29 @@
 ﻿#pragma once
 
-#include "Archetype.h"
+#include "ComponentData.h"
+
+#include <list>
+#include <unordered_map>
+#include <vector>
 
 namespace ECS {
 
-struct Entity
+struct EntityArchetype
 {
-	uint32_t index;
-	uint32_t version;
-
-	inline constexpr bool operator==(const Entity& e) const noexcept
-	{
-		return index == e.index && version == e.version;
-	}
-
-	inline constexpr bool operator!=(const Entity& e) const noexcept
-	{
-		return !(*this == e);
-	}
+	std::vector<ComponentType>            components;
+	size_t                                entity_capacity;
+	std::list<ComponentDataChunk>         chunks;
+	std::unordered_map<TypeIndex, size_t> chunk_offsets;
+	size_t                                chunk_size;
 };
+
+using Entity        = uint64_t;
+using EntityIndex   = uint32_t;
+using EntityVersion = uint32_t;
+
+constexpr Entity kInvalidEntity = 0xFFFFFFFFFFFFFFFFull;
+
+EntityIndex   GetEntityIndex(Entity entity);
+EntityVersion GetEntityVersion(Entity entity);
 
 } // namespace ECS

@@ -2,13 +2,14 @@
 
 #include "TypeInfo.h"
 
+#include <memory>
 #include <type_traits>
 #include <utility>
 
 namespace ECS {
 
 //! \brief コンポーネントデータの最大チャンクサイズ
-static constexpr uint32_t kMaxChunkSize = 16 * 1024;
+constexpr size_t kMaxChunkSize = 16 * 1024;
 
 //! \brief 全てのコンポーネントデータの制約
 template<typename T>
@@ -17,13 +18,13 @@ concept ComponentDataType = requires {
 	requires std::is_standard_layout_v<T>;
 };
 
+//! \brief 特定の型のコンポーネントデータ配列
 template<ComponentDataType T>
 class ComponentDataArray
 {
 public:
-	ComponentDataArray(T* begin, size_t offset, size_t size) noexcept
+	ComponentDataArray(T* begin, size_t size) noexcept
 	    : m_begin(begin)
-	    , m_offset(offset)
 	    , m_size(size)
 	{
 	}
@@ -33,39 +34,29 @@ public:
 		if (index >= m_size)
 			return nullptr;
 
-		return (m_begin + m_offset) + index;
+		return m_begin + index;
 	}
 
 	T* begin() noexcept
 	{
-		return (m_begin + m_offset);
+		return m_begin;
 	}
 
 	T* end() noexcept
 	{
-		return (m_begin + m_offset) + m_size;
+		return m_begin + m_size;
 	}
 
 private:
 	T*     m_begin;
-	size_t m_offset;
 	size_t m_size;
 };
 
-//! \brief コンポーネントデータのメモリ領域
+//! \brief コンポーネントデータチャンク
 struct ComponentDataChunk
 {
-	uint32_t entity_count;
-
-	const uint8_t* memory() const
-	{
-		return (uint8_t*)this + sizeof(ComponentDataChunk);
-	}
-
-	uint8_t* memory()
-	{
-		return const_cast<uint8_t*>(std::as_const(*this).memory());
-	}
+	std::unique_ptr<uint8_t[]> buffer;
+	uint32_t                   entity_count;
 };
 
 //! \brief コンポーネントデータの型情報

@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "Archetype.h"
-#include "BlockAllocator.h"
 #include "Entity.h"
+
+#include <deque>
 
 namespace ECS {
 
@@ -13,19 +13,19 @@ public:
 
 	~EntityManager();
 
-	Archetype* GetOrCreateArchetype(std::initializer_list<ComponentType> components);
+	std::weak_ptr<EntityArchetype> GetOrCreateArchetype(std::initializer_list<ComponentType> components);
 
 	template<ComponentDataType... Ts>
-	Archetype* GetOrCreateArchetype()
+	std::weak_ptr<EntityArchetype> GetOrCreateArchetype()
 	{
 		return GetOrCreateArchetype({ (GetComponentType<Ts>())... });
 	}
 
-	Entity CreateEntity(Archetype* archetype);
+	Entity CreateEntity(std::weak_ptr<EntityArchetype> archetype);
 
 	Entity CreateEntity(std::initializer_list<ComponentType> components)
 	{
-		return CreateEntity(GetOrCreateArchetype(components));
+		return CreateEntity(GetOrCreateArchetype(std::move(components)));
 	}
 
 	template<ComponentDataType... Ts>
@@ -34,66 +34,24 @@ public:
 		return CreateEntity({ (GetComponentType<Ts>())... });
 	}
 
-	void DeleteEntity(const Entity& entity);
+	void DeleteEntity(Entity entity);
 
-	bool IsEntityExists(const Entity& entity) const noexcept;
-
-	template<ComponentDataType T>
-	const T* GetComponentDataArray() const
-	{
-		const auto& location = m_locations.at(0);
-		return reinterpret_cast<const T*>(getComponentDataArray(location, TypeInfo<T>::GetTypeIndex()));
-	}
-
-	template<ComponentDataType T>
-	T* GetComponentDataArray()
-	{
-		return const_cast<T*>(std::as_const(*this).GetComponentDataArray<T>());
-	}
-
-	template<ComponentDataType T>
-	const T* GetComponentData(const Entity& entity) const
-	{
-		const auto& location = m_locations.at(entity.index);
-		if (entity.index >= location.chunk->entity_count)
-			return nullptr;
-
-		const T* arr = reinterpret_cast<const T*>(getComponentDataArray(location, TypeInfo<T>::GetTypeIndex()));
-		if (!arr)
-			return nullptr;
-
-		return arr + location.offset;
-	}
-
-	template<ComponentDataType T>
-	T* GetComponentData(const Entity& entity)
-	{
-		return const_cast<T*>(std::as_const(*this).GetComponentData<T>(entity));
-	}
+	bool IsEntityExists(Entity entity) const noexcept;
 
 private:
 	struct EntityDataLocation
 	{
-		Archetype*          archetype;
+		EntityArchetype*    archetype;
 		ComponentDataChunk* chunk;
-		uint32_t            offset;
+		uint32_t            chunk_offset;
 	};
 
 private:
-	ComponentDataChunk* allocateChunk(Archetype* archetype);
-
-	const uint8_t* getComponentDataArray(const EntityDataLocation& location, TypeIndex index) const;
-
-	uint8_t* getComponentDataArray(const EntityDataLocation& location, TypeIndex index)
-	{
-		return const_cast<uint8_t*>(std::as_const(*this).getComponentDataArray(location, index));
-	}
 
 private:
-	std::vector<std::unique_ptr<Archetype>> m_archetypes;
-	std::vector<EntityDataLocation>         m_locations;
-	std::deque<Entity>                      m_free_entities;
-	BlockAllocator                          m_chunk_allocator;
+	std::list<std::shared_ptr<EntityArchetype>> m_archetypes;
+	std::vector<EntityDataLocation>             m_locations;
+	std::deque<Entity>                          m_free_entities;
 };
 
 } // namespace ECS

@@ -3,6 +3,9 @@
 #include <cassert>
 #include <iostream>
 
+#define CRT_DBG_MAP_ALLOC
+#include <crtdbg.h>
+
 struct Position
 {
 	float value[3];
@@ -23,6 +26,10 @@ ECS_TYPE_INFO(Scale);
 
 int main(int, char**)
 {
+#if defined(_DEBUG)
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
+
 	// 型識別子の重複チェック、型名の取得
 #if 1
 	{
@@ -65,100 +72,49 @@ int main(int, char**)
 	}
 #endif
 
-    // アーキタイプ
+	// エンティティ
 #if 1
 	{
-		std::printf("[TEST] Archetype\n");
+		ECS::EntityManager em;
+
+		std::printf("[TEST] EntityArchetype\n");
 
 		constexpr ECS::ComponentType p1 = ECS::GetComponentType<Position>();
 		constexpr ECS::ComponentType r1 = ECS::GetComponentType<Rotation>();
 		constexpr ECS::ComponentType s1 = ECS::GetComponentType<Scale>();
 
-		ECS::Archetype ar({ p1, r1, s1 });
+		auto archetype = em.GetOrCreateArchetype({ p1, r1, s1 });
+		if (auto ar = archetype.lock())
+		{
+			std::printf("[TEST] - entity_capacity = %zu\n", ar->entity_capacity);
+			std::printf("[TEST] - chunk_size = %zu\n", ar->chunk_size);
+			std::printf("[TEST] - %s: chunk_offset = %zu\n", p1.name, ar->chunk_offsets.at(p1.index));
+			std::printf("[TEST] - %s: chunk_offset = %zu\n", r1.name, ar->chunk_offsets.at(r1.index));
+			std::printf("[TEST] - %s: chunk_offset = %zu\n", s1.name, ar->chunk_offsets.at(s1.index));
+		}
+		std::printf("\n");
 
-		std::printf("[TEST] - EntityCapacity = %llu\n", ar.GetEntityCapacity());
-		std::printf("[TEST] - ChunkSize = %llu\n", ar.GetChunkSize());
-		std::printf("[TEST] - %s: ChunkOffset = %llu\n", p1.name, ar.GetChunkOffset(p1.index));
-		std::printf("[TEST] - %s: ChunkOffset = %llu\n", r1.name, ar.GetChunkOffset(r1.index));
-		std::printf("[TEST] - %s: ChunkOffset = %llu\n", s1.name, ar.GetChunkOffset(s1.index));
+        std::printf("[TEST] Entity\n");
+
+        ECS::Entity e1 = em.CreateEntity(archetype);
+		std::printf("[TEST] - e1: index = %u, version = %u\n", ECS::GetEntityIndex(e1), ECS::GetEntityVersion(e1));
+		em.DeleteEntity(e1);
+
+        ECS::Entity e2 = em.CreateEntity(archetype);
+		std::printf("[TEST] - e2: index = %u, version = %u\n", ECS::GetEntityIndex(e2), ECS::GetEntityVersion(e2));
+		assert(e2 == ECS::kInvalidEntity);
+
+        ECS::Entity e3 = em.CreateEntity<Position, Rotation, Scale>();
+		std::printf("[TEST] - e3: index = %u, version = %u\n", ECS::GetEntityIndex(e3), ECS::GetEntityVersion(e3));
+
+        ECS::Entity e4 = em.CreateEntity<Position, Rotation, Scale>();
+		std::printf("[TEST] - e4: index = %u, version = %u\n", ECS::GetEntityIndex(e4), ECS::GetEntityVersion(e4));
+
+        em.DeleteEntity(e3);
+        em.DeleteEntity(e4);
 
 		std::printf("\n");
 	}
-#endif
-
-    // エンティティ
-#if 1
-    {
-		std::printf("[TEST] Entity\n");
-
-        ECS::EntityManager em;
-
-        ECS::Archetype* ar = em.GetOrCreateArchetype<Position, Rotation, Scale>();
-		ECS::Entity     e0 = em.CreateEntity(ar);
-		ECS::Entity     e1 = em.CreateEntity(ar);
-		ECS::Entity     e2 = em.CreateEntity(ar);
-
-        int i = 0;
-		for (const auto& e : { e0, e1, e2 })
-		{
-			if (auto v = em.GetComponentData<Position>(e))
-			{
-				v->value[0] = static_cast<float>(i);
-				v->value[1] = static_cast<float>(i);
-				v->value[2] = static_cast<float>(i);
-				++i;
-			}
-			if (auto v = em.GetComponentData<Rotation>(e))
-			{
-				v->value[0] = static_cast<float>(i);
-				v->value[1] = static_cast<float>(i);
-				v->value[2] = static_cast<float>(i);
-				v->value[3] = static_cast<float>(i);
-				++i;
-			}
-			if (auto v = em.GetComponentData<Scale>(e))
-			{
-				v->value[0] = static_cast<float>(i);
-				v->value[1] = static_cast<float>(i);
-				v->value[2] = static_cast<float>(i);
-				++i;
-			}
-		}
-
-        std::printf("[TEST] - GetComponentData\n");
-
-        for (const auto& e : { e0, e1, e2 })
-		{
-			std::printf("[TEST] -- Entity(%u, %u)\n", e.index, e.version);
-			if (auto v = em.GetComponentData<Position>(e))
-			{
-				std::printf("[TEST] -- Position: %f, %f, %f\n", v->value[0], v->value[1], v->value[2]);
-			}
-			if (auto v = em.GetComponentData<Rotation>(e))
-			{
-				std::printf("[TEST] -- Rotation: %f, %f, %f, %f\n", v->value[0], v->value[1], v->value[2], v->value[3]);
-			}
-			if (auto v = em.GetComponentData<Scale>(e))
-			{
-				std::printf("[TEST] -- Scale   : %f, %f, %f\n", v->value[0], v->value[1], v->value[2]);
-			}
-		}
-
-		std::printf("[TEST] - GetComponentDataArray\n");
-
-        const auto p = em.GetComponentDataArray<Position>();
-		const auto r = em.GetComponentDataArray<Rotation>();
-		const auto s = em.GetComponentDataArray<Scale>();
-
-		for (uint32_t i = 0; i < 3; ++i)
-		{
-			std::printf("[TEST] -- Position(%u): %f, %f, %f\n", i, p[i].value[0], p[i].value[1], p[i].value[2]);
-			std::printf("[TEST] -- Rotation(%u): %f, %f, %f, %f\n", i, r[i].value[0], r[i].value[1], r[i].value[2], r[i].value[3]);
-			std::printf("[TEST] -- Scale(%u)   : %f, %f, %f\n", i, s[i].value[0], s[i].value[1], s[i].value[2]);
-		}
-
-        std::printf("\n");
-    }
 #endif
 
 	return 0;
