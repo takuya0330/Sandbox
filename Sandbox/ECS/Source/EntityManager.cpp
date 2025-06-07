@@ -151,7 +151,7 @@ Entity EntityManager::CreateEntity(std::weak_ptr<EntityArchetype> archetype)
 
 void EntityManager::DeleteEntity(Entity entity)
 {
-	if (std::find(m_free_entities.begin(), m_free_entities.end(), entity) != m_free_entities.end())
+	if (!IsEntityExists(entity))
 	{
 		// 既に削除済み
 		return;
