@@ -24,9 +24,6 @@ struct Scale
 };
 ECS_COMPONENT_DATA(Scale);
 
-template<ECS::ComponentDataType T>
-using CTInfo = ECS::TypeInfo<T, ECS::ComponentTypeTraits<T>>;
-
 int main(int, char**)
 {
 #if defined(_DEBUG)
@@ -38,13 +35,13 @@ int main(int, char**)
 	{
 		std::printf("[TEST] TypeInfo\n");
 
-		auto pid1 = CTInfo<Position>::GetTypeIndex();
-		auto rid1 = CTInfo<Rotation>::GetTypeIndex();
-		auto sid1 = CTInfo<Scale>::GetTypeIndex();
+		auto pid1 = ECS::ComponentTypeInfo<Position>::GetTypeIndex();
+		auto rid1 = ECS::ComponentTypeInfo<Rotation>::GetTypeIndex();
+		auto sid1 = ECS::ComponentTypeInfo<Scale>::GetTypeIndex();
 
-		std::printf("[TEST] - %s: 0x%llx\n", CTInfo<Position>::GetTypeName(), pid1);
-		std::printf("[TEST] - %s: 0x%llx\n", CTInfo<Rotation>::GetTypeName(), rid1);
-		std::printf("[TEST] - %s: 0x%llx\n", CTInfo<Scale>::GetTypeName(), sid1);
+		std::printf("[TEST] - %s: 0x%llx\n", ECS::ComponentTypeInfo<Position>::GetTypeName(), pid1);
+		std::printf("[TEST] - %s: 0x%llx\n", ECS::ComponentTypeInfo<Rotation>::GetTypeName(), rid1);
+		std::printf("[TEST] - %s: 0x%llx\n", ECS::ComponentTypeInfo<Scale>::GetTypeName(), sid1);
 
 		assert(pid1 != rid1);
 		assert(pid1 != sid1);

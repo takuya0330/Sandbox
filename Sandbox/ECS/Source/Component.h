@@ -19,15 +19,11 @@ struct ComponentTypeTraits : public TypeInfoTraits
 		return "Unknown ComponentType";
 	}
 };
+template<ComponentDataType T>
+using ComponentTypeInfo = TypeInfo<T, ComponentTypeTraits<T>>;
 
 struct ComponentType
 {
-	enum class Metadata
-	{
-		kReadWrite = 1 << 0,
-		kReadOnly  = 1 << 1,
-	};
-
 	const char* name;
 	uint64_t    id;
 	size_t      size;
@@ -48,12 +44,22 @@ template<ComponentDataType T>
 ComponentType GetComponentType() noexcept
 {
 	return {
-		TypeInfo<T, ComponentTypeTraits<T>>::GetTypeName(),
-		TypeInfo<T, ComponentTypeTraits<T>>::GetTypeIndex(),
+		ComponentTypeInfo<T>::GetTypeName(),
+		ComponentTypeInfo<T>::GetTypeIndex(),
 		sizeof(T),
 		alignof(T)
 	};
 }
+
+class ComponentDataArray
+{
+public:
+};
+
+class ComponentDataGroup
+{
+public:
+};
 
 namespace Internal {
 
