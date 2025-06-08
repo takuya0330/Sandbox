@@ -1,79 +1,40 @@
 ﻿#pragma once
 
 #include <cstdint>
+#include <type_traits>
 
 namespace ECS {
-namespace Internal {
 
-// https://stackoverflow.com/a/74453799/475145
-
-template<typename T, T Index>
-struct IndexCounter
+struct TypeInfoTraits
 {
-	using Tag = IndexCounter;
+	using NameType  = const char*;
+	using IndexType = uint64_t;
 
-	struct Generator
+	static const NameType GetTypeName() noexcept
 	{
-		friend constexpr auto _Check(Tag)
-		{
-			return true;
-		}
-	};
-	friend constexpr auto _Check(Tag);
-
-	template<typename T = Tag, auto = _Check(T())>
-	static constexpr auto Exists(auto)
-	{
-		return true;
+		return "Unknown";
 	}
 
-	static constexpr auto Exists(...)
+	static const IndexType GetTypeIndex() noexcept
 	{
-#pragma warning(disable : 6319)
-		return Generator(), false;
-#pragma warning(default : 6319)
+		return static_cast<IndexType>(-1);
 	}
 };
 
-template<typename T, typename U, U Index = U()>
-constexpr U TypeIndexOf() noexcept
-{
-	if constexpr (Internal::IndexCounter<U, Index>::Exists(Index))
-	{
-		return TypeIndexOf<T, U, Index + 1>();
-	}
-	return Index;
-}
-
-} // namespace Internal
-
-using TypeIndex = uint32_t;
-
-template<typename T, typename = void>
+template<typename T, typename Traits = TypeInfoTraits>
 struct TypeInfo
 {
-	static constexpr const char* GetTypeName() noexcept
-	{
-		return "";
-	}
+	using NameType  = typename Traits::NameType;
+	using IndexType = typename Traits::IndexType;
 
-	static constexpr TypeIndex GetTypeIndex() noexcept
+	static const NameType GetTypeName() noexcept
 	{
-		return 0xFFFFFFFF;
+		return Traits::GetTypeName();
+	}
+	static const IndexType GetTypeIndex() noexcept
+	{
+		return Traits::GetTypeIndex();
 	}
 };
 
 } // namespace ECS
-
-#define ECS_TYPE_INFO(Type)                                                                                  \
-	template<> struct ECS::TypeInfo<Type, std::enable_if_t<std::is_same_v<Type, std::remove_cvref_t<Type>>>> \
-	{                                                                                                        \
-		static constexpr const char* GetTypeName() noexcept                                                  \
-		{                                                                                                    \
-			return #Type;                                                                                    \
-		}                                                                                                    \
-		static constexpr ECS::TypeIndex GetTypeIndex() noexcept                                              \
-		{                                                                                                    \
-			return ECS::Internal::TypeIndexOf<Type, ECS::TypeIndex>();                                       \
-		}                                                                                                    \
-	}

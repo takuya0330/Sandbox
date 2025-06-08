@@ -19,13 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\ComponentDataGroup.cpp" />
+    <ClCompile Include="Source\Component.cpp" />
     <ClCompile Include="Source\EntityManager.cpp" />
     <ClCompile Include="Source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\ComponentData.h" />
-    <ClInclude Include="Source\ComponentDataGroup.h" />
+    <ClInclude Include="Source\Component.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\EntityManager.h" />
     <ClInclude Include="Source\TypeInfo.h" />

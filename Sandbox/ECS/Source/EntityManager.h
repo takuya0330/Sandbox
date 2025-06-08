@@ -1,10 +1,32 @@
 ﻿#pragma once
 
-#include "ComponentDataGroup.h"
+#include "Component.h"
+#include "Entity.h"
 
+#include <list>
+#include <memory>
+#include <unordered_map>
+#include <vector>
 #include <deque>
 
 namespace ECS {
+
+constexpr size_t kMaxChunkSize = 16 * 1024;
+
+struct ComponentDataChunk
+{
+	std::unique_ptr<uint8_t[]> buffer;
+	uint32_t                   entity_count;
+};
+
+struct EntityArchetype
+{
+	std::vector<ComponentType>           components;
+	size_t                               entity_capacity;
+	std::list<ComponentDataChunk>        chunks;
+	std::unordered_map<uint64_t, size_t> chunk_offsets;
+	size_t                               chunk_size;
+};
 
 struct EntityDataLocation
 {
@@ -41,9 +63,9 @@ public:
 		return CreateEntity({ (GetComponentType<Ts>())... });
 	}
 
-	void DeleteEntity(Entity entity);
+	void DeleteEntity(const Entity& entity);
 
-	bool IsEntityExists(Entity entity) const noexcept;
+	bool IsEntityExists(const Entity& entity) const noexcept;
 
 private:
 	std::list<std::shared_ptr<EntityArchetype>> m_archetypes;

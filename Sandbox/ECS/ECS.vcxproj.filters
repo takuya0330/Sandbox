@@ -9,27 +9,24 @@
     <ClCompile Include="Source\Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EntityManager.cpp">
+    <ClCompile Include="Source\Component.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ComponentDataGroup.cpp">
+    <ClCompile Include="Source\EntityManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\ComponentData.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EntityManager.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Entity.h">
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\TypeInfo.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ComponentDataGroup.h">
+    <ClInclude Include="Source\Component.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EntityManager.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

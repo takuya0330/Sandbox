@@ -12,22 +12,7 @@ constexpr size_t alignup(size_t value, size_t align)
 	return (value + (align - 1)) & ~(align - 1);
 }
 
-Entity makeEntity(EntityIndex index, EntityVersion version)
-{
-	return (static_cast<Entity>(version) << 32) | static_cast<Entity>(index);
-}
-
 } // namespace
-
-EntityIndex GetEntityIndex(Entity entity)
-{
-	return static_cast<EntityIndex>(entity);
-}
-
-EntityVersion GetEntityVersion(Entity entity)
-{
-	return static_cast<EntityVersion>(entity >> 32);
-}
 
 EntityManager::EntityManager()
     : m_archetypes()
@@ -49,7 +34,7 @@ std::weak_ptr<EntityArchetype> EntityManager::GetOrCreateArchetype(std::initiali
 	    sorted_components.end(),
 	    [](const ComponentType& a, const ComponentType& b)
 	    {
-		    return a.index < b.index;
+		    return a.id < b.id;
 	    });
 
 	// 一致するアーキタイプが存在するか確認
@@ -94,12 +79,12 @@ std::weak_ptr<EntityArchetype> EntityManager::GetOrCreateArchetype(std::initiali
 		size_t entity_capacity = kMaxChunkSize / total_size;
 
 		// チャンク内のメモリオフセット位置とメモリ最大値を計算
-		size_t                                chunk_size = 0;
-		std::unordered_map<TypeIndex, size_t> chunk_offsets;
+		size_t                               chunk_size = 0;
+		std::unordered_map<uint64_t, size_t> chunk_offsets;
 		for (const auto& it : sorted_components)
 		{
-			chunk_size              = alignup(chunk_size, it.alignment);
-			chunk_offsets[it.index] = chunk_size;
+			chunk_size           = alignup(chunk_size, it.alignment);
+			chunk_offsets[it.id] = chunk_size;
 			chunk_size += it.size * entity_capacity;
 		}
 		assert(chunk_size <= kMaxChunkSize);
@@ -122,34 +107,37 @@ std::weak_ptr<EntityArchetype> EntityManager::GetOrCreateArchetype(std::initiali
 
 Entity EntityManager::CreateEntity(std::weak_ptr<EntityArchetype> archetype)
 {
+	Entity new_entity;
+
 	auto locked_archetype = archetype.lock();
 	if (locked_archetype == nullptr)
 	{
-		return kInvalidEntity;
+		return new_entity;
 	}
 
-	Entity entity = kInvalidEntity;
 	if (m_free_entities.empty())
 	{
-		entity = makeEntity(static_cast<EntityIndex>(m_locations.size()), 0);
+		new_entity.index   = static_cast<uint32_t>(m_locations.size());
+		new_entity.version = 0;
 		m_locations.emplace_back();
 	}
 	else
 	{
-		auto old = m_free_entities.front();
-		entity   = makeEntity(GetEntityIndex(old), GetEntityVersion(old) + 1);
+		auto old_entity    = m_free_entities.front();
+		new_entity.index   = old_entity.index;
+		new_entity.version = old_entity.version + 1;
 		m_free_entities.pop_front();
 	}
 
-	auto& location        = m_locations.at(GetEntityIndex(entity));
+	auto& location        = m_locations.at(new_entity.index);
 	location.archetype    = locked_archetype.get();
 	location.chunk        = &locked_archetype->chunks.back();
 	location.chunk_offset = location.chunk->entity_count++;
 
-	return entity;
+	return new_entity;
 }
 
-void EntityManager::DeleteEntity(Entity entity)
+void EntityManager::DeleteEntity(const Entity& entity)
 {
 	if (!IsEntityExists(entity))
 	{
@@ -158,7 +146,7 @@ void EntityManager::DeleteEntity(Entity entity)
 	}
 	m_free_entities.emplace_back(entity);
 
-	auto& location = m_locations.at(GetEntityIndex(entity));
+	auto& location = m_locations.at(entity.index);
 	if (--location.chunk->entity_count == 0)
 	{
 		auto it = std::find_if(
@@ -194,7 +182,7 @@ void EntityManager::DeleteEntity(Entity entity)
 	}
 }
 
-bool EntityManager::IsEntityExists(Entity entity) const noexcept
+bool EntityManager::IsEntityExists(const Entity& entity) const noexcept
 {
 	if (m_free_entities.empty())
 	{
