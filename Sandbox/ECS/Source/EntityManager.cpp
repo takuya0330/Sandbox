@@ -72,18 +72,18 @@ std::weak_ptr<EntityArchetype> EntityManager::GetOrCreateArchetype(std::initiali
 		    0ull,
 		    [](size_t i, const ComponentType& c)
 		    {
-			    return i + alignup(c.size, c.alignment);
+			    return i + alignup(c.size, kCacheLineSize);
 		    });
 
 		// チャンク内のエンティティの最大数
 		size_t entity_capacity = kMaxChunkSize / total_size;
 
 		// チャンク内のメモリオフセット位置とメモリ最大値を計算
-		size_t                               chunk_size = 0;
-		std::unordered_map<uint64_t, size_t> chunk_offsets;
+		size_t                                chunk_size = 0;
+		std::unordered_map<TypeIndex, size_t> chunk_offsets;
 		for (const auto& it : sorted_components)
 		{
-			chunk_size           = alignup(chunk_size, it.alignment);
+			chunk_size           = alignup(chunk_size, kCacheLineSize);
 			chunk_offsets[it.id] = chunk_size;
 			chunk_size += it.size * entity_capacity;
 		}

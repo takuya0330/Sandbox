@@ -3,15 +3,16 @@
 #include "Component.h"
 #include "Entity.h"
 
+#include <deque>
 #include <list>
 #include <memory>
 #include <unordered_map>
 #include <vector>
-#include <deque>
 
 namespace ECS {
 
-constexpr size_t kMaxChunkSize = 16 * 1024;
+constexpr size_t kMaxChunkSize  = 16 * 1024;
+constexpr size_t kCacheLineSize = 16;
 
 struct ComponentDataChunk
 {
@@ -21,11 +22,11 @@ struct ComponentDataChunk
 
 struct EntityArchetype
 {
-	std::vector<ComponentType>           components;
-	size_t                               entity_capacity;
-	std::list<ComponentDataChunk>        chunks;
-	std::unordered_map<uint64_t, size_t> chunk_offsets;
-	size_t                               chunk_size;
+	std::vector<ComponentType>            components;
+	size_t                                entity_capacity;
+	std::list<ComponentDataChunk>         chunks;
+	std::unordered_map<TypeIndex, size_t> chunk_offsets;
+	size_t                                chunk_size;
 };
 
 struct EntityDataLocation
