@@ -2,17 +2,18 @@
 
 #include "TypeInfo.h"
 
+#include <type_traits>
+
 namespace ECS {
 
 template<typename T>
 concept ComponentDataType = requires {
 	requires std::is_trivially_copyable_v<T>;
 	requires std::is_standard_layout_v<T>;
-	requires std::is_same_v<T, std::remove_cvref_t<T>>;
 };
 
-template<ComponentDataType T>
-struct ComponentTypeTraits : public TypeInfoTraits
+template<ComponentDataType T, typename = std::enable_if_t<std::is_same_v<T, std::remove_cvref_t<T>>>>
+struct ComponentTypeInfoTraits : public TypeInfoTraits
 {
 	static const NameType GetTypeName() noexcept
 	{
@@ -20,7 +21,7 @@ struct ComponentTypeTraits : public TypeInfoTraits
 	}
 };
 template<ComponentDataType T>
-using ComponentTypeInfo = TypeInfo<T, ComponentTypeTraits<T>>;
+using ComponentTypeInfo = TypeInfo<T, ComponentTypeInfoTraits<T>>;
 
 struct ComponentType
 {
@@ -51,16 +52,6 @@ ComponentType GetComponentType() noexcept
 	};
 }
 
-class ComponentDataArray
-{
-public:
-};
-
-class ComponentDataGroup
-{
-public:
-};
-
 namespace Internal {
 
 uint64_t MakeComponentTypeIndex() noexcept;
@@ -69,7 +60,7 @@ uint64_t MakeComponentTypeIndex() noexcept;
 } // namespace ECS
 
 #define ECS_COMPONENT_DATA(Type)                                                    \
-	template<> struct ECS::ComponentTypeTraits<Type> : public TypeInfoTraits        \
+	template<> struct ECS::ComponentTypeInfoTraits<Type> : public TypeInfoTraits    \
 	{                                                                               \
 		static const NameType GetTypeName() noexcept                                \
 		{                                                                           \
