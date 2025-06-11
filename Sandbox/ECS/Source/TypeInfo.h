@@ -4,10 +4,12 @@
 
 namespace ECS {
 
+using TypeIndex = uint32_t;
+
 struct TypeInfoTraits
 {
 	using NameType  = const char*;
-	using IndexType = uint64_t;
+	using IndexType = TypeIndex;
 
 	static const NameType GetTypeName() noexcept
 	{

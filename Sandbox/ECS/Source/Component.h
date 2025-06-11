@@ -25,14 +25,12 @@ using ComponentTypeInfo = TypeInfo<T, ComponentTypeInfoTraits<T>>;
 
 struct ComponentType
 {
-	const char* name;
-	uint64_t    id;
-	size_t      size;
-	size_t      alignment;
+	TypeIndex id;
+	uint32_t  size;
 
 	inline constexpr bool operator==(const ComponentType& c) const noexcept
 	{
-		return id == c.id && size == c.size && alignment == c.alignment;
+		return id == c.id && size == c.size;
 	}
 
 	inline constexpr bool operator!=(const ComponentType& c) const noexcept
@@ -45,16 +43,14 @@ template<ComponentDataType T>
 ComponentType GetComponentType() noexcept
 {
 	return {
-		ComponentTypeInfo<T>::GetTypeName(),
 		ComponentTypeInfo<T>::GetTypeIndex(),
 		sizeof(T),
-		alignof(T)
 	};
 }
 
 namespace Internal {
 
-uint64_t MakeComponentTypeIndex() noexcept;
+TypeIndex MakeComponentTypeIndex() noexcept;
 
 } // namespace Internal
 } // namespace ECS

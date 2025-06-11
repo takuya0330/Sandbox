@@ -5,9 +5,9 @@
 namespace ECS {
 namespace Internal {
 
-uint64_t MakeComponentTypeIndex() noexcept
+TypeIndex MakeComponentTypeIndex() noexcept
 {
-	static std::atomic<uint64_t> index = 0;
+	static std::atomic<TypeIndex> index = 0;
 	return index++;
 }
 
