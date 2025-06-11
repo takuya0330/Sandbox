@@ -25,12 +25,12 @@ using ComponentTypeInfo = TypeInfo<T, ComponentTypeInfoTraits<T>>;
 
 struct ComponentType
 {
-	TypeIndex id;
+	TypeIndex index;
 	uint32_t  size;
 
 	inline constexpr bool operator==(const ComponentType& c) const noexcept
 	{
-		return id == c.id && size == c.size;
+		return index == c.index && size == c.size;
 	}
 
 	inline constexpr bool operator!=(const ComponentType& c) const noexcept

@@ -34,7 +34,7 @@ std::weak_ptr<EntityArchetype> EntityManager::GetOrCreateArchetype(std::initiali
 	    sorted_components.end(),
 	    [](const ComponentType& a, const ComponentType& b)
 	    {
-		    return a.id < b.id;
+		    return a.index < b.index;
 	    });
 
 	// 一致するアーキタイプが存在するか確認
@@ -83,8 +83,8 @@ std::weak_ptr<EntityArchetype> EntityManager::GetOrCreateArchetype(std::initiali
 		std::unordered_map<TypeIndex, size_t> chunk_offsets;
 		for (const auto& it : sorted_components)
 		{
-			chunk_size           = alignup(chunk_size, kCacheLineSize);
-			chunk_offsets[it.id] = chunk_size;
+			chunk_size              = alignup(chunk_size, kCacheLineSize);
+			chunk_offsets[it.index] = chunk_size;
 			chunk_size += it.size * entity_capacity;
 		}
 		assert(chunk_size <= kMaxChunkSize);
