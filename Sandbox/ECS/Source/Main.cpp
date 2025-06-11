@@ -60,9 +60,9 @@ int main(int, char**)
 		ECS::ComponentType r1 = ECS::GetComponentType<Rotation>();
 		ECS::ComponentType s1 = ECS::GetComponentType<Scale>();
 
-		std::printf("[TEST] - Position: id = 0x%X, size = %u\n", p1.id, p1.size);
-		std::printf("[TEST] - Rotation: id = 0x%X, size = %u\n", r1.id, r1.size);
-		std::printf("[TEST] - Scale   : id = 0x%X, size = %u\n", s1.id, s1.size);
+		std::printf("[TEST] - Position: id = 0x%X, size = %u\n", p1.index, p1.size);
+		std::printf("[TEST] - Rotation: id = 0x%X, size = %u\n", r1.index, r1.size);
+		std::printf("[TEST] - Scale   : id = 0x%X, size = %u\n", s1.index, s1.size);
 
 		assert(p1 != r1);
 		assert(p1 != s1);
@@ -88,9 +88,9 @@ int main(int, char**)
 		{
 			std::printf("[TEST] - entity_capacity = %zu\n", ar->entity_capacity);
 			std::printf("[TEST] - chunk_size = %zu\n", ar->chunk_size);
-			std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Position>::GetTypeName(), ar->chunk_offsets.at(p1.id));
-			std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Rotation>::GetTypeName(), ar->chunk_offsets.at(r1.id));
-			std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Scale>::GetTypeName(), ar->chunk_offsets.at(s1.id));
+			std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Position>::GetTypeName(), ar->chunk_offsets.at(p1.index));
+			std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Rotation>::GetTypeName(), ar->chunk_offsets.at(r1.index));
+			std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Scale>::GetTypeName(), ar->chunk_offsets.at(s1.index));
 		}
 		std::printf("\n");
 
