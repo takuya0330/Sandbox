@@ -1,15 +1,19 @@
 ﻿#pragma once
 
-#include "Component.h"
+#include "ComponentGroup.h"
 #include "Entity.h"
 
 #include <deque>
 #include <list>
 #include <memory>
 #include <unordered_map>
-#include <vector>
 
 namespace ECS {
+namespace Internal {
+
+void MakeSortedComponentTypes(std::vector<ComponentType>& sorted_components, std::initializer_list<ComponentType> unsorted_components);
+
+} // namespace Internal
 
 constexpr size_t kMaxChunkSize  = 16 * 1024;
 constexpr size_t kCacheLineSize = 16;
@@ -43,25 +47,27 @@ public:
 
 	~EntityManager();
 
-	std::weak_ptr<EntityArchetype> GetOrCreateArchetype(std::initializer_list<ComponentType> components);
+	EntityArchetype* GetOrCreateArchetype(std::initializer_list<ComponentType> components);
 
-	template<ComponentDataType... Ts>
-	std::weak_ptr<EntityArchetype> GetOrCreateArchetype()
+	template<ComponentDataConstraints... Ts>
+	EntityArchetype* GetOrCreateArchetype()
 	{
-		return GetOrCreateArchetype({ (GetComponentType<Ts>())... });
+		return GetOrCreateArchetype({ GetComponentType<Ts>()... });
 	}
 
-	Entity CreateEntity(std::weak_ptr<EntityArchetype> archetype);
+	bool FindMatchingArchetypes(std::list<EntityArchetype*>& outs, const EntityQuery& query);
+
+	Entity CreateEntity(EntityArchetype* archetype);
 
 	Entity CreateEntity(std::initializer_list<ComponentType> components)
 	{
 		return CreateEntity(GetOrCreateArchetype(std::move(components)));
 	}
 
-	template<ComponentDataType... Ts>
+	template<ComponentDataConstraints... Ts>
 	Entity CreateEntity()
 	{
-		return CreateEntity({ (GetComponentType<Ts>())... });
+		return CreateEntity({ GetComponentType<Ts>()... });
 	}
 
 	void DeleteEntity(const Entity& entity);
@@ -69,9 +75,14 @@ public:
 	bool IsEntityExists(const Entity& entity) const noexcept;
 
 private:
-	std::list<std::shared_ptr<EntityArchetype>> m_archetypes;
-	std::vector<EntityDataLocation>             m_locations;
-	std::deque<Entity>                          m_free_entities;
+	bool getArchetype(EntityArchetype** archetype, const std::vector<ComponentType>& components);
+
+	ComponentDataChunk* createChunk(EntityArchetype* archetype);
+
+private:
+	std::list<EntityArchetype>      m_archetypes;
+	std::vector<EntityDataLocation> m_locations;
+	std::deque<Entity>              m_free_entities;
 };
 
 } // namespace ECS

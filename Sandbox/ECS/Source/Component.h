@@ -7,12 +7,12 @@
 namespace ECS {
 
 template<typename T>
-concept ComponentDataType = requires {
+concept ComponentDataConstraints = requires {
 	requires std::is_trivially_copyable_v<T>;
 	requires std::is_standard_layout_v<T>;
 };
 
-template<ComponentDataType T, typename = std::enable_if_t<std::is_same_v<T, std::remove_cvref_t<T>>>>
+template<ComponentDataConstraints T, typename = std::enable_if_t<std::is_same_v<T, std::remove_cvref_t<T>>>>
 struct ComponentTypeInfoTraits : public TypeInfoTraits
 {
 	static const NameType GetTypeName() noexcept
@@ -20,7 +20,7 @@ struct ComponentTypeInfoTraits : public TypeInfoTraits
 		return "Unknown ComponentType";
 	}
 };
-template<ComponentDataType T>
+template<ComponentDataConstraints T>
 using ComponentTypeInfo = TypeInfo<T, ComponentTypeInfoTraits<T>>;
 
 struct ComponentType
@@ -39,7 +39,7 @@ struct ComponentType
 	}
 };
 
-template<ComponentDataType T>
+template<ComponentDataConstraints T>
 ComponentType GetComponentType() noexcept
 {
 	return {

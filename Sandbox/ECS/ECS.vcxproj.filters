@@ -15,6 +15,9 @@
     <ClCompile Include="Source\EntityManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ComponentGroup.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Entity.h">
@@ -27,6 +30,12 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\EntityManager.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ComponentGroup.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

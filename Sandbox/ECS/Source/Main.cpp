@@ -84,14 +84,11 @@ int main(int, char**)
 		ECS::ComponentType s1 = ECS::GetComponentType<Scale>();
 
 		auto archetype = em.GetOrCreateArchetype({ p1, r1, s1 });
-		if (auto ar = archetype.lock())
-		{
-			std::printf("[TEST] - entity_capacity = %zu\n", ar->entity_capacity);
-			std::printf("[TEST] - chunk_size = %zu\n", ar->chunk_size);
-			std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Position>::GetTypeName(), ar->chunk_offsets.at(p1.index));
-			std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Rotation>::GetTypeName(), ar->chunk_offsets.at(r1.index));
-			std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Scale>::GetTypeName(), ar->chunk_offsets.at(s1.index));
-		}
+		std::printf("[TEST] - entity_capacity = %zu\n", archetype->entity_capacity);
+		std::printf("[TEST] - chunk_size = %zu\n", archetype->chunk_size);
+		std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Position>::GetTypeName(), archetype->chunk_offsets.at(p1.index));
+		std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Rotation>::GetTypeName(), archetype->chunk_offsets.at(r1.index));
+		std::printf("[TEST] - %s: chunk_offset = %zu\n", ECS::ComponentTypeInfo<Scale>::GetTypeName(), archetype->chunk_offsets.at(s1.index));
 		std::printf("\n");
 
 		std::printf("[TEST] Entity\n");
@@ -102,19 +99,34 @@ int main(int, char**)
 
 		ECS::Entity e2 = em.CreateEntity(archetype);
 		std::printf("[TEST] - e2: index = %u, version = %u\n", e2.index, e2.version);
-		assert(e2 == ECS::Entity());
 
 		ECS::Entity e3 = em.CreateEntity<Position, Rotation, Scale>();
 		std::printf("[TEST] - e3: index = %u, version = %u\n", e3.index, e3.version);
 
-		ECS::Entity e4 = em.CreateEntity<Position, Rotation, Scale>();
-		std::printf("[TEST] - e4: index = %u, version = %u\n", e4.index, e4.version);
-
 		em.DeleteEntity(e3);
-		em.DeleteEntity(e4);
+		em.DeleteEntity(e2);
 
 		std::printf("\n");
 	}
+#endif
+
+    // コンポーネント
+#if 1
+    {
+		ECS::EntityManager em;
+
+		std::printf("[TEST] ComponentDataGroup\n");
+
+		ECS::Entity e1 = em.CreateEntity<Position, Rotation, Scale>();
+		ECS::Entity e2 = em.CreateEntity<Position, Rotation>();
+		ECS::Entity e3 = em.CreateEntity<Position, Scale>();
+		ECS::Entity e4 = em.CreateEntity<Position>();
+
+		ECS::ComponentDataGroup group(em);
+		group.Include<Position>()
+		    .Exclude<Scale>()
+		    .Build();
+    }
 #endif
 
 	return 0;

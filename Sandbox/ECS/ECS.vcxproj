@@ -20,13 +20,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Component.cpp" />
+    <ClCompile Include="Source\ComponentGroup.cpp" />
     <ClCompile Include="Source\EntityManager.cpp" />
     <ClCompile Include="Source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Component.h" />
+    <ClInclude Include="Source\ComponentGroup.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\EntityManager.h" />
+    <ClInclude Include="Source\System.h" />
     <ClInclude Include="Source\TypeInfo.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
