@@ -45,23 +45,24 @@ public:
 
     ComponentDataGroup& Include(std::initializer_list<ComponentType> components);
 
+    ComponentDataGroup& Exclude(std::initializer_list<ComponentType> components);
+
+	void Build();
+
+    size_t GetSize() const;
+
+public:
 	template<ComponentDataConstraints... Ts>
 	ComponentDataGroup& Include()
 	{
 		return Include({ GetComponentType<Ts>()... });
 	}
 
-    ComponentDataGroup& Exclude(std::initializer_list<ComponentType> components);
-
 	template<ComponentDataConstraints... Ts>
 	ComponentDataGroup& Exclude()
 	{
 		return Exclude({ GetComponentType<Ts>()... });
 	}
-
-	void Build();
-
-    size_t GetSize() const;
 
 	template<ComponentDataConstraints T>
 	ComponentDataArray<T> GetComponentDataArray()
