@@ -49,30 +49,42 @@ public:
 
 	EntityArchetype* GetOrCreateArchetype(std::initializer_list<ComponentType> components);
 
-	template<ComponentDataConstraints... Ts>
+	bool FindMatchingArchetypes(std::list<EntityArchetype*>& outs, const EntityQuery& query);
+
+	Entity CreateEntity(EntityArchetype* archetype);
+
+	void DeleteEntity(const Entity& entity);
+
+	bool IsEntityExists(const Entity& entity) const noexcept;
+
+	bool AddComponentData(const Entity& entity, const ComponentType& component);
+
+    bool RemoveComponentData(const Entity& entity, const ComponentType& component);
+
+public:
+    template<ComponentDataConstraints... Ts>
 	EntityArchetype* GetOrCreateArchetype()
 	{
 		return GetOrCreateArchetype({ GetComponentType<Ts>()... });
 	}
 
-	bool FindMatchingArchetypes(std::list<EntityArchetype*>& outs, const EntityQuery& query);
-
-	Entity CreateEntity(EntityArchetype* archetype);
-
-	Entity CreateEntity(std::initializer_list<ComponentType> components)
-	{
-		return CreateEntity(GetOrCreateArchetype(std::move(components)));
-	}
-
 	template<ComponentDataConstraints... Ts>
 	Entity CreateEntity()
 	{
-		return CreateEntity({ GetComponentType<Ts>()... });
+		return CreateEntity(GetOrCreateArchetype({ GetComponentType<Ts>()... }));
 	}
 
-	void DeleteEntity(const Entity& entity);
+    template<ComponentDataConstraints T>
+    bool AddComponentData(const Entity& entity)
+    {
+		return AddComponentData(entity, GetComponentType<T>());
+    }
 
-	bool IsEntityExists(const Entity& entity) const noexcept;
+    template<ComponentDataConstraints T>
+	bool RemoveComponentData(const Entity& entity)
+	{
+		return RemoveComponentData(entity, GetComponentType<T>());
+	}
 
 private:
 	bool getArchetype(EntityArchetype** archetype, const std::vector<ComponentType>& components);

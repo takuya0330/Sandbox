@@ -255,6 +255,16 @@ bool EntityManager::IsEntityExists(const Entity& entity) const noexcept
 	return std::find(m_free_entities.begin(), m_free_entities.end(), entity) == m_free_entities.end();
 }
 
+bool EntityManager::AddComponentData(const Entity& entity, const ComponentType& component)
+{
+	return true;
+}
+
+bool EntityManager::RemoveComponentData(const Entity& entity, const ComponentType& component)
+{
+    return true;
+}
+
 bool EntityManager::getArchetype(EntityArchetype** archetype, const std::vector<ComponentType>& components)
 {
 	const auto& it = std::find_if(
