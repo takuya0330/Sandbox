@@ -52,7 +52,7 @@ int main(int, char**)
 {
 	D d {};
 
-    Reflect(d, [](auto name, auto& field)
+    Runtime::Reflect(d, [](auto name, auto& field)
         {
 		    std::cout << "name: " << name << ", field: " << field << std::endl;
 	    });

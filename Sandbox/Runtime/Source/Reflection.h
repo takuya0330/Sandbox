@@ -2,6 +2,8 @@
 
 #include <tuple>
 
+namespace Runtime {
+
 template<typename T>
 concept Reflectable = requires {
 	T::Fields();
@@ -48,9 +50,11 @@ static void Reflect(T& obj, Function&& func)
 	    });
 }
 
+} // namespace Runtime
+
 #define REFLECTION(Type, ...)                \
 	using This = Type;                       \
-	friend struct Reflection<This>;          \
+	friend struct Runtime::Reflection<This>; \
 	static constexpr auto Fields()           \
 	{                                        \
 		return std::make_tuple(__VA_ARGS__); \
