@@ -29,9 +29,8 @@ void makeQueryData(std::vector<ComponentType>& outs, std::vector<ComponentType>&
 
 } // namespace
 
-ComponentDataGroup::ComponentDataGroup(EntityManager& entity_manager)
-    : m_entity_manager(entity_manager)
-    , m_query()
+ComponentDataGroup::ComponentDataGroup()
+    : m_query()
     , m_archetypes()
 {
 }
@@ -56,10 +55,10 @@ ComponentDataGroup& ComponentDataGroup::Exclude(std::initializer_list<ComponentT
 	return *this;
 }
 
-void ComponentDataGroup::Build()
+void ComponentDataGroup::Build(EntityManager& entity_manager)
 {
 	m_archetypes.clear();
-	m_entity_manager.FindMatchingArchetypes(m_archetypes, m_query);
+	entity_manager.FindMatchingArchetypes(m_archetypes, m_query);
 }
 
 size_t ComponentDataGroup::GetSize() const

@@ -41,13 +41,13 @@ private:
 class ComponentDataGroup
 {
 public:
-	ComponentDataGroup(EntityManager& entity_manager);
+	ComponentDataGroup();
 
     ComponentDataGroup& Include(std::initializer_list<ComponentType> components);
 
     ComponentDataGroup& Exclude(std::initializer_list<ComponentType> components);
 
-	void Build();
+	void Build(EntityManager& entity_manager);
 
     size_t GetSize() const;
 
@@ -71,7 +71,6 @@ public:
 	}
 
 private:
-	EntityManager&              m_entity_manager;
 	EntityQuery                 m_query;
 	std::list<EntityArchetype*> m_archetypes;
 };

@@ -122,10 +122,10 @@ int main(int, char**)
 		ECS::Entity e3 = em.CreateEntity<Position, Scale>();
 		ECS::Entity e4 = em.CreateEntity<Position>();
 
-		ECS::ComponentDataGroup group(em);
-		group.Include<Position>()
+		ECS::ComponentDataGroup data;
+		data.Include<Position>()
 		    .Exclude<Scale>()
-		    .Build();
+		    .Build(em);
     }
 #endif
 
