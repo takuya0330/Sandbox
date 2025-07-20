@@ -2,6 +2,7 @@
 
 int main(int, char**)
 {
+	using namespace DirectX;
 	using namespace XMH;
 
 	constexpr XMFLOAT2 a(0, 0), b(1, 1);
