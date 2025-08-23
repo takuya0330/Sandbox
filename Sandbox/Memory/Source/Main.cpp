@@ -1,8 +1,8 @@
 ﻿#include "BlockAllocator.h"
 #include "LinearAllocator.h"
 
-#include <iostream>
 #include <bit>
+#include <iostream>
 
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
@@ -165,16 +165,19 @@ void operator delete(void* ptr, std::align_val_t) noexcept
 class block_memory_resource : public std::pmr::memory_resource
 {
 public:
-	block_memory_resource(size_t block_size, size_t block_count)
-	    : m_memory(nullptr)
+	block_memory_resource(size_t block_size, size_t block_count, void* memory = nullptr)
+	    : m_memory(memory)
 	    , m_head(nullptr)
 	    , m_block_size(block_size)
 	    , m_block_count(block_count)
 	{
-		m_memory = static_cast<char*>(::operator new(block_size * block_count, std::align_val_t(alignof(std::max_align_t))));
+		if (memory == nullptr)
+			m_memory = ::operator new(block_size * block_count, std::align_val_t(alignof(std::max_align_t)));
+
+		auto base = reinterpret_cast<char*>(m_memory);
 		for (size_t i = 0; i < m_block_count; ++i)
 		{
-			auto node  = reinterpret_cast<Node*>(m_memory + i * m_block_size);
+			auto node  = reinterpret_cast<Node*>(base + i * m_block_size);
 			node->next = m_head;
 
 			m_head = node;
@@ -186,16 +189,17 @@ public:
 		::operator delete(m_memory, std::align_val_t(alignof(std::max_align_t)));
 	}
 
-    bool is_range(void* p) const noexcept
-    {
-        auto ptr = reinterpret_cast<char*>(p);
-        return (ptr >= m_memory) && (ptr < m_memory + m_block_size * m_block_count);
+	bool is_range(void* p) const noexcept
+	{
+		auto ptr  = reinterpret_cast<char*>(p);
+		auto base = reinterpret_cast<char*>(m_memory);
+		return (ptr >= m_memory) && (ptr < base + m_block_size * m_block_count);
 	}
 
-    bool is_small(size_t size) const noexcept
-    {
+	bool is_small(size_t size) const noexcept
+	{
 		return size <= m_block_size;
-    }
+	}
 
 private:
 	struct Node
@@ -236,7 +240,7 @@ private:
 	}
 
 private:
-	char*  m_memory;
+	void*  m_memory;
 	Node*  m_head;
 	size_t m_block_size;
 	size_t m_block_count;
@@ -255,28 +259,28 @@ public:
 	}
 
 private:
-    void* do_allocate(size_t bytes, size_t alignment) override
+	void* do_allocate(size_t bytes, size_t alignment) override
 	{
 		for (auto& pool : m_blocks)
-        {
+		{
 			if (pool->is_small(bytes))
 				return pool->allocate(bytes, alignment);
-        }
+		}
 		return nullptr;
 	}
 
-    void do_deallocate(void* p, size_t bytes, size_t alignment) override
-    {
+	void do_deallocate(void* p, size_t bytes, size_t alignment) override
+	{
 		for (auto& pool : m_blocks)
-        {
+		{
 			if (pool->is_range(p))
 				pool->deallocate(p, bytes, alignment);
-        }
-    }
+		}
+	}
 
-    bool do_is_equal(const std::pmr::memory_resource& other) const noexcept override
-    {
-        return this == &other;
+	bool do_is_equal(const std::pmr::memory_resource& other) const noexcept override
+	{
+		return this == &other;
 	}
 
 private:
@@ -398,8 +402,8 @@ int main(int, char**)
 		std::cout << "d2 = " << *d2 << ", address = " << d2 << "\n";
 	}
 
-    pool_memory_resource pool_resource;
-    {
+	pool_memory_resource pool_resource;
+	{
 		std::cout << "--- pool_memory_resource ---\n";
 
 		int* p1 = static_cast<int*>(pool_resource.allocate(sizeof(int), alignof(int)));
@@ -412,7 +416,7 @@ int main(int, char**)
 		std::cout << "p2 = [" << p2[0] << ", " << p2[1] << ", " << p2[2] << "], address = " << p2 << "\n";
 		pool_resource.deallocate(p1, sizeof(int), alignof(int));
 		pool_resource.deallocate(p2, sizeof(int) * 3, alignof(int));
-    }
+	}
 
 	return 0;
 }
