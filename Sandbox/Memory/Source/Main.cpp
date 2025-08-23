@@ -3,6 +3,7 @@
 
 #include <bit>
 #include <iostream>
+#include <vector>
 
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
@@ -417,6 +418,17 @@ int main(int, char**)
 		pool_resource.deallocate(p1, sizeof(int), alignof(int));
 		pool_resource.deallocate(p2, sizeof(int) * 3, alignof(int));
 	}
+
+    std::pmr::polymorphic_allocator<char> pmr_alloc(&pool_resource);
+    {
+        std::pmr::vector<int> vec(pmr_alloc);
+        vec.push_back(10);
+        vec.push_back(20);
+        vec.push_back(30);
+        for (int v : vec) {
+            std::cout << "vec element: " << v << "\n";
+		}
+    }
 
 	return 0;
 }
