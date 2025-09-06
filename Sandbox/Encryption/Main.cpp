@@ -133,11 +133,6 @@ public:
 	{
 	}
 
-	constexpr std::string_view to_string_view() const noexcept
-	{
-		return { m_value.data(), m_value.size() };
-	}
-
 	template<size_t N2>
 	constexpr bool operator==(const encrypted_string<N2>& rhs) const noexcept
 	{
@@ -148,6 +143,11 @@ public:
 	constexpr bool operator!=(const encrypted_string<N2>& rhs) const noexcept
 	{
 		return !(*this == rhs);
+	}
+
+	constexpr std::string_view to_string_view() const noexcept
+	{
+		return { m_value.data(), m_value.size() };
 	}
 
 	constexpr bool empty() const noexcept
