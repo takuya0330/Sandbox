@@ -97,6 +97,33 @@ std::basic_string<T> from_hex(std::string_view sv, bool is_xor = false)
 	return ret;
 }
 
+template<class T>
+struct fnv1;
+
+template<>
+struct fnv1<uint32_t>
+{
+	static constexpr uint32_t k_offset = 216613626u;
+	static constexpr uint32_t k_prime  = 16777619u;
+
+	static constexpr uint32_t hash(const char* str, const size_t count) noexcept
+	{
+		return ((count ? hash(str, count - 1) : k_offset) ^ str[count]) * k_prime;
+	}
+};
+
+template<>
+struct fnv1<uint64_t>
+{
+	static constexpr uint64_t k_offset = 14695981039346656037ull;
+	static constexpr uint64_t k_prime  = 1099511628211ull;
+
+	static constexpr uint64_t hash(const char* str, const size_t count) noexcept
+	{
+		return ((count ? hash(str, count - 1) : k_offset) ^ str[count]) * k_prime;
+	}
+};
+
 template<size_t N>
 class encrypted_string
 {
@@ -140,7 +167,7 @@ public:
 
 	constexpr uint64_t hash() const noexcept
 	{
-		return 0;
+		return fnv1<uint64_t>::hash(m_value.data(), m_value.size() - 1);
 	}
 
 private:
@@ -191,6 +218,7 @@ int main(int, char**)
 		std::cout << "[TEST] encrypted_string" << std::endl;
 		constexpr auto encrypted = make_encrypted_string("GameWorld");
 		std::cout << encrypted.data() << std::endl;
+		std::cout << encrypted.hash() << std::endl;
 		std::cout << make_decrypted_string<char>(encrypted) << std::endl;
 		std::cout << std::endl;
 	}
@@ -199,12 +227,15 @@ int main(int, char**)
 		std::cout << "[TEST] compare encrypted_string" << std::endl;
 		constexpr auto encrypted1 = make_encrypted_string("GameWorld");
 		std::cout << encrypted1.data() << std::endl;
+		std::cout << encrypted1.hash() << std::endl;
 		std::cout << make_decrypted_string<char>(encrypted1) << std::endl;
 		constexpr auto encrypted2 = make_encrypted_string("GameWorld");
 		std::cout << encrypted2.data() << std::endl;
+		std::cout << encrypted2.hash() << std::endl;
 		std::cout << make_decrypted_string<char>(encrypted2) << std::endl;
 		constexpr auto encrypted3 = make_encrypted_string("GameWorld3");
 		std::cout << encrypted3.data() << std::endl;
+		std::cout << encrypted3.hash() << std::endl;
 		std::cout << make_decrypted_string<char>(encrypted3) << std::endl;
 		constexpr auto check1 = (encrypted1 == encrypted2) ? "equal" : "not equal";
 		std::cout << check1 << std::endl;
