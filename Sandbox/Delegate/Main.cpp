@@ -155,7 +155,7 @@ public:
 	template<typename T, typename F>
 	void Bind(T* obj, F&& f)
 	{
-		m_functor.Bind([obj, f](Args... args) -> R
+		Bind([obj, f](Args... args) -> R
 		    {
 			    return (obj->*f)(std::forward<Args>(args)...);
 		    });
@@ -199,7 +199,7 @@ public:
 	template<typename T, typename F>
 	void Bind(int index, T* obj, F&& f)
 	{
-		m_functors.at(index).Bind([obj, f](Args... args) -> R
+		Bind(index, [obj, f](Args... args)->R
 		    {
 			    return (obj->*f)(std::forward<Args>(args)...);
 		    });
