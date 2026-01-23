@@ -4,39 +4,16 @@
     <Filter Include="Source">
       <UniqueIdentifier>{471b8231-abec-4765-88b4-c1204102247f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Include">
+      <UniqueIdentifier>{3292218a-855e-417c-b0dd-7458ddc93928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Src">
+      <UniqueIdentifier>{409f001f-677c-4bf4-ad7c-8bf16c711024}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Component.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EntityManager.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ComponentGroup.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Source\Entity.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TypeInfo.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Component.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EntityManager.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ComponentGroup.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System.h">
-      <Filter>Source</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
