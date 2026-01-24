@@ -9,22 +9,22 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Include\STL">
-      <UniqueIdentifier>{5521e7b8-2499-4e5e-88b1-f8e75f191d18}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Include\Module">
       <UniqueIdentifier>{ac9eab28-22aa-420b-ba14-fd965bc030d5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Module">
       <UniqueIdentifier>{a8b3193c-53cd-4887-9bfb-ef5e46340159}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\STL">
+      <UniqueIdentifier>{565c85f9-1a89-4f42-a880-4f76d8bba419}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\STL">
+      <UniqueIdentifier>{b8eb21c8-534d-432b-99e6-24a5305a09fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\DLL.h">
       <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\STL\TypeInfo.h">
-      <Filter>Include\STL</Filter>
     </ClInclude>
     <ClInclude Include="Include\Module\Module.h">
       <Filter>Include\Module</Filter>
@@ -32,10 +32,31 @@
     <ClInclude Include="Source\Module\ModuleManager.h">
       <Filter>Source\Module</Filter>
     </ClInclude>
+    <ClInclude Include="Include\STL\CharType.h">
+      <Filter>Include\STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\STL\Xorshift.h">
+      <Filter>Include\STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\STL\Hex.h">
+      <Filter>Include\STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\STL\EncryptedString.h">
+      <Filter>Include\STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\STL\FNV1.h">
+      <Filter>Include\STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\STL\TypeInfo.h">
+      <Filter>Include\STL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\STL\TypeInfo.cpp">
+      <Filter>Source\STL</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

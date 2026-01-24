@@ -57,7 +57,7 @@ int main(int, char**)
 	std::cout << "TypeInfos :" << std::endl;
 	for (const auto& it : type_infos)
 	{
-		std::cout << "- " << it->name << std::endl;
+		std::cout << "- name: " << it->GetName() << ", size: " << it->GetSize() << ", hash: " << std::hex << it->GetHash() << std::dec << "[" << it->GetHash() << "]" << std::endl;
 	}
 
 	export1->Activate();

@@ -4,5 +4,5 @@
 
 struct DLL_API Test2 : public Test1
 {
-	TYPE_INFO_1(Test2);
+	TYPE_INFO_2(Test2, Test1);
 };
