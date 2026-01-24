@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Include\STL">
+      <UniqueIdentifier>{5521e7b8-2499-4e5e-88b1-f8e75f191d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Module">
+      <UniqueIdentifier>{ac9eab28-22aa-420b-ba14-fd965bc030d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Module">
+      <UniqueIdentifier>{a8b3193c-53cd-4887-9bfb-ef5e46340159}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\DLL.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\STL\TypeInfo.h">
+      <Filter>Include\STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Module\Module.h">
+      <Filter>Include\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Module\ModuleManager.h">
+      <Filter>Source\Module</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
