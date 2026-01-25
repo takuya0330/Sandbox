@@ -15,12 +15,6 @@
     <Filter Include="Source\Module">
       <UniqueIdentifier>{a8b3193c-53cd-4887-9bfb-ef5e46340159}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\STL">
-      <UniqueIdentifier>{565c85f9-1a89-4f42-a880-4f76d8bba419}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\STL">
-      <UniqueIdentifier>{b8eb21c8-534d-432b-99e6-24a5305a09fa}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\DLL.h">
@@ -29,34 +23,10 @@
     <ClInclude Include="Include\Module\Module.h">
       <Filter>Include\Module</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Module\ModuleManager.h">
-      <Filter>Source\Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\STL\CharType.h">
-      <Filter>Include\STL</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\STL\Xorshift.h">
-      <Filter>Include\STL</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\STL\Hex.h">
-      <Filter>Include\STL</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\STL\EncryptedString.h">
-      <Filter>Include\STL</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\STL\FNV1.h">
-      <Filter>Include\STL</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\STL\TypeInfo.h">
-      <Filter>Include\STL</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\STL\TypeInfo.cpp">
-      <Filter>Source\STL</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

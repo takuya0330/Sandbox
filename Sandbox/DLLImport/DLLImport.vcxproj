@@ -128,17 +128,9 @@
   <ItemGroup>
     <ClInclude Include="Include\DLL.h" />
     <ClInclude Include="Include\Module\Module.h" />
-    <ClInclude Include="Include\STL\CharType.h" />
-    <ClInclude Include="Include\STL\EncryptedString.h" />
-    <ClInclude Include="Include\STL\FNV1.h" />
-    <ClInclude Include="Include\STL\Hex.h" />
-    <ClInclude Include="Include\STL\TypeInfo.h" />
-    <ClInclude Include="Include\STL\Xorshift.h" />
-    <ClInclude Include="Source\Module\ModuleManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\STL\TypeInfo.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
