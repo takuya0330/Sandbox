@@ -1,5 +1,4 @@
 ﻿#include "DLLImport/Include/Module/Module.h"
-#include "DLLImport/Include/STL/TypeInfo.h"
 
 #include <Windows.h>
 #include <iostream>
@@ -34,30 +33,6 @@ int main(int, char**)
 	{
 		std::cerr << "CreateModule failed.\n";
 		return 1;
-	}
-
-	std::vector<std::string> dependents;
-	export1->GetDependentModules(dependents);
-	std::cout << "Module dependencies:" << std::endl;
-	for (const auto& it : dependents)
-	{
-		std::cout << "- " << it << std::endl;
-	}
-
-	std::vector<std::string> optional;
-	std::cout << "Module optionals:" << std::endl;
-	export1->GetOptionalModules(optional);
-	for (const auto& it : optional)
-	{
-		std::cout << "- " << it << std::endl;
-	}
-
-	std::vector<const STL::TypeInfo*> type_infos;
-	export1->RegisterTypeInfos(type_infos);
-	std::cout << "TypeInfos :" << std::endl;
-	for (const auto& it : type_infos)
-	{
-		std::cout << "- name: " << it->GetName() << ", size: " << it->GetSize() << ", hash: " << std::hex << it->GetHash() << std::dec << "[" << it->GetHash() << "]" << std::endl;
 	}
 
 	export1->Activate();
