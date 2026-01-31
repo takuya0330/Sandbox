@@ -23,12 +23,20 @@ To* Cast(From* obj)
 	return nullptr;
 }
 
+TYPE_INFO_PRIMITIVE(int);
+
 int main(int, char**)
 {
 	Base    base;
 	Derived derived;
 
     auto b_to_d = Cast<Derived>(&base);
+
+    auto bti = GetTypeInfo<Base>();
+	auto dti = GetTypeInfo<Derived>();
+	auto iti = GetTypeInfo<int>();
+	auto sti = GetTypeInfo<int32_t>();
+	// auto fti = GetTypeInfo<float>(); // error
 
 	return 0;
 }

@@ -40,6 +40,37 @@ private:
 	const TypeInfo*  m_super_type_info;
 };
 
+template<typename T, typename = std::void_t<>>
+struct HasGetTypeInfo
+    : std::false_type
+{
+};
+
+template<typename T>
+struct HasGetTypeInfo<T, std::void_t<std::enable_if_t<std::is_same_v<decltype(T::GetTypeInfo()), const TypeInfo*>>>>
+    : std::true_type
+{
+};
+
+template<typename T>
+const TypeInfo* GetTypeInfoPrimitive()
+{
+	static_assert(std::_Always_false<T>);
+}
+
+template<typename T>
+const TypeInfo* GetTypeInfo()
+{
+    if constexpr (HasGetTypeInfo<T>::value)
+    {
+		return T::GetTypeInfo();
+    }
+	else
+	{
+		return GetTypeInfoPrimitive<T>();
+	}
+}
+
 #define STRING_IMPL(x) #x
 #define STRING(x)      STRING_IMPL(x)
 
@@ -56,4 +87,13 @@ private:
 		static constexpr auto name = MakeEncryptedString(STRING(This));       \
 		static const TypeInfo info(name, sizeof(This), Super::GetTypeInfo()); \
 		return &info;                                                         \
+	}
+
+#define TYPE_INFO_PRIMITIVE(Type)                                       \
+	template<>                                                          \
+	const TypeInfo* GetTypeInfoPrimitive<Type>()                        \
+	{                                                                   \
+		static constexpr auto name = MakeEncryptedString(STRING(Type)); \
+		static const TypeInfo info(name, sizeof(Type), nullptr);        \
+		return &info;                                                   \
 	}
