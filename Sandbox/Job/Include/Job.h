@@ -14,6 +14,8 @@
 #define JOB_SYSTEM_PART1 1
 #define JOB_SYSTEM_PART2 1
 
+#define JOB_SYSTEM_FIX 1
+
 #if JOB_SYSTEM_PART2
 using JobItem = std::packaged_task<void()>;
 using JobHandle = std::shared_future<void>;
@@ -63,8 +65,11 @@ private:
     //! \brief ジョブ数
     std::atomic<int> m_job_count;
 
+#if JOB_SYSTEM_FIX
+#else
     //! \brief ジョブ完了フラグ
     std::atomic<bool> m_is_complete;
+#endif
 
     //! \brief ワーカースレッド終了フラグ
     std::atomic<bool> m_is_stop_worker;

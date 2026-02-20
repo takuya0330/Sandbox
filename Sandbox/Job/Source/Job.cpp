@@ -6,7 +6,10 @@ JobSystem::JobSystem(size_t thread_count)
     , m_workers()
     , m_condition()
     , m_job_count(0)
+#if JOB_SYSTEM_FIX
+#else
     , m_is_complete(false)
+#endif
     , m_is_stop_worker(false)
 {
     for (size_t i = 0; i < thread_count; ++i)
@@ -17,9 +20,17 @@ JobSystem::JobSystem(size_t thread_count)
 
 JobSystem::~JobSystem()
 {
-    // 全てのワーカースレッドに停止信号を送る
-    m_is_stop_worker.store(true);
+#if JOB_SYSTEM_FIX
+	// 全てのジョブが完了するのを待つ
+	WaitForAll();
+#endif
 
+    // 全てのワーカースレッドに停止信号を送る
+#if JOB_SYSTEM_FIX
+	m_is_stop_worker.store(true, std::memory_order_release);
+#else
+    m_is_stop_worker.store(true);
+#endif
     // 全てのワーカースレッドを起こす
     m_condition.notify_all();
 
@@ -46,17 +57,22 @@ void JobSystem::Schedule(const JobFunction& job)
 #endif
     {
         std::lock_guard<std::mutex> lock(m_mutex);
-
+#if JOB_SYSTEM_FIX
+#else
         // インクリメント
         m_job_count.fetch_add(1);
         // 未完了状態にする
         m_is_complete.store(false);
-
+#endif
 #if 0
 #elif JOB_SYSTEM_PART2
         m_job_queue.push(std::move(item));
 #elif JOB_SYSTEM_PART1
         m_job_queue.push(job);
+#endif
+#if JOB_SYSTEM_FIX
+		// インクリメント
+		m_job_count.fetch_add(1, std::memory_order_release);
 #endif
     }
     // 待機中のワーカースレッドを一つ起こす
@@ -87,8 +103,19 @@ JobHandle JobSystem::Schedule(const JobFunction& job, const std::vector<JobHandl
 
 void JobSystem::WaitForAll()
 {
+#if JOB_SYSTEM_FIX
+	while (true)
+	{
+		int job_count = m_job_count.load(std::memory_order_acquire);
+		if (job_count <= 0)
+			break;
+
+		m_job_count.wait(job_count, std::memory_order_acquire);
+	}
+#else
     // trueになるまで待機する
     m_is_complete.wait(false);
+#endif
 }
 
 void JobSystem::wokerThread()
@@ -104,11 +131,25 @@ void JobSystem::wokerThread()
         {
             // ジョブキューにジョブが追加されるor停止フラグが有効になるまで待機する
             std::unique_lock<std::mutex> lock(m_mutex);
-            m_condition.wait(lock, [this] { return !m_job_queue.empty() || m_is_stop_worker; });
+#if JOB_SYSTEM_FIX
+			m_condition.wait(lock, [this]
+			    {
+				    return !m_job_queue.empty() || m_is_stop_worker.load(std::memory_order_acquire);
+			    });
+#else
+			m_condition.wait(lock, [this]
+			    {
+				    return !m_job_queue.empty() || m_is_stop_worker;
+			    });
+#endif
 
             // キューが空かつ停止フラグが有効な場合終了する
-            if (m_job_queue.empty() && m_is_stop_worker)
-            {
+#if JOB_SYSTEM_FIX
+			if (m_is_stop_worker.load(std::memory_order_acquire) && m_job_queue.empty())
+#else
+			if (m_job_queue.empty() && m_is_stop_worker)
+#endif
+			{
                 break;
             }
 
@@ -121,12 +162,19 @@ void JobSystem::wokerThread()
         job();
 
         // デクリメント
-        m_job_count.fetch_sub(1);
+#if JOB_SYSTEM_FIX
+		if (m_job_count.fetch_sub(1, std::memory_order_acq_rel) == 1)
+		{
+			m_job_count.notify_all();
+		}
+#else
+		m_job_count.fetch_sub(1);
         if (m_job_count.load() == 0)
         {
             // カウントが0になったら完了フラグを立てて通知
             m_is_complete.store(true);
             m_is_complete.notify_all();
         }
-    }
+#endif
+	}
 }
