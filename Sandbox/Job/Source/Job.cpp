@@ -58,6 +58,7 @@ void JobSystem::Schedule(const JobFunction& job)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
 #if JOB_SYSTEM_FIX
+		m_job_count.fetch_add(1, std::memory_order_relaxed);
 #else
         // インクリメント
         m_job_count.fetch_add(1);
@@ -69,10 +70,6 @@ void JobSystem::Schedule(const JobFunction& job)
         m_job_queue.push(std::move(item));
 #elif JOB_SYSTEM_PART1
         m_job_queue.push(job);
-#endif
-#if JOB_SYSTEM_FIX
-		// インクリメント
-		m_job_count.fetch_add(1, std::memory_order_release);
 #endif
     }
     // 待機中のワーカースレッドを一つ起こす
@@ -134,7 +131,7 @@ void JobSystem::wokerThread()
 #if JOB_SYSTEM_FIX
 			m_condition.wait(lock, [this]
 			    {
-				    return !m_job_queue.empty() || m_is_stop_worker.load(std::memory_order_acquire);
+				    return !m_job_queue.empty() || m_is_stop_worker.load(std::memory_order_relaxed);
 			    });
 #else
 			m_condition.wait(lock, [this]
@@ -145,7 +142,7 @@ void JobSystem::wokerThread()
 
             // キューが空かつ停止フラグが有効な場合終了する
 #if JOB_SYSTEM_FIX
-			if (m_is_stop_worker.load(std::memory_order_acquire) && m_job_queue.empty())
+			if (m_is_stop_worker.load(std::memory_order_relaxed) && m_job_queue.empty())
 #else
 			if (m_job_queue.empty() && m_is_stop_worker)
 #endif
